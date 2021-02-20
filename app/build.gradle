@@ -69,6 +69,9 @@ dependencies {
     implementation "androidx.lifecycle:lifecycle-runtime-ktx:2.3.0"
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:2.3.0"
 
+    //ANIMATIONS
+    implementation 'com.airbnb.android:lottie:3.0.0'
+
     //Hilt
     implementation "com.google.dagger:hilt-android:2.31-alpha"
     kapt "com.google.dagger:hilt-android-compiler:2.31-alpha"

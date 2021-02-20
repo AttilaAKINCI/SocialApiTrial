@@ -1,5 +1,6 @@
 package com.akinci.twitterapitrial.feature.splash
 
+import android.animation.Animator
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -26,22 +27,33 @@ class SplashFragment : Fragment() {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_splash, container, false)
         binding.lifecycleOwner = viewLifecycleOwner
 
+        binding.animation.addAnimatorListener(object : Animator.AnimatorListener {
+            override fun onAnimationStart(animation: Animator?) {}
+            override fun onAnimationEnd(animation: Animator?) { navigateToLogin() }
+            override fun onAnimationCancel(animation: Animator?) {}
+            override fun onAnimationRepeat(animation: Animator?) {}
+        })
+
         Timber.d("SplashFragment created..")
         return binding.root
+    }
+
+    override fun onStart() {
+        super.onStart()
+        binding.animation.playAnimation()
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         //hide appbar on splash screen
         (activity as AppCompatActivity).supportActionBar?.hide()
-        navigateToLogin()
     }
 
     private fun navigateToLogin(){
         Handler(Looper.getMainLooper()).postDelayed({
             /** Navigate to Login Page **/
             NavHostFragment.findNavController(this).navigate(R.id.action_splashFragment_to_loginFragment)
-        }, 1000)
+        }, 100)
     }
 
 }

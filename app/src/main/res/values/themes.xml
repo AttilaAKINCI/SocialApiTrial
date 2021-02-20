@@ -9,6 +9,14 @@
         <item name="windowNoTitle">true</item>
     </style>
 
+    <style name="Widget.TextView" parent="Widget.AppCompat.TextView">
+        <item name="android:textColor">@drawable/primary_text_color</item>
+        <item name="android:textSize">@dimen/text_style_medium</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:letterSpacing">0.02</item>
+        <item name="android:fontFamily">sans-serif</item>
+    </style>
+
     <style name="Widget.Button.Colored.Rounded" parent="Widget.AppCompat.Button.Borderless.Colored">
         <item name="android:background">@drawable/background_button_primary</item>
         <item name="android:textColor">@drawable/button_primary_text_color</item>
