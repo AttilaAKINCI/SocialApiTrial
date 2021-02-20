@@ -11,6 +11,7 @@ import androidx.databinding.DataBindingUtil
 import androidx.navigation.NavOptions
 import androidx.navigation.fragment.NavHostFragment
 import com.akinci.twitterapitrial.R
+import com.akinci.twitterapitrial.common.component.SnackBar
 import com.akinci.twitterapitrial.databinding.FragmentLoginBinding
 import com.akinci.twitterapitrial.databinding.FragmentSplashBinding
 import timber.log.Timber
@@ -28,7 +29,11 @@ class LoginFragment : Fragment() {
 
         binding.btnSignIn.setOnClickListener{
             /** Navigate to DashBoard Page **/
-            NavHostFragment.findNavController(this).navigate(R.id.action_loginFragment_to_dashboardFragment)
+            SnackBar.makeLarge(binding.root, "Twitter Login Clicked", SnackBar.LENGTH_LONG).show()
+
+            Handler(Looper.getMainLooper()).postDelayed({
+                NavHostFragment.findNavController(this).navigate(R.id.action_loginFragment_to_dashboardFragment)
+            }, 1000)
         }
 
         Timber.d("LoginFragment created..")
