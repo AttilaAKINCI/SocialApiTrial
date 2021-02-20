@@ -3,10 +3,8 @@ package com.akinci.twitterapitrial.feature.dashboard.view
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.view.*
 import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.navigation.NavOptions
@@ -23,12 +21,14 @@ class DashboardFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        super.onCreateView(inflater, container, savedInstanceState)
         // Inflate the layout for this fragment
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_dashboard, container, false)
         binding.lifecycleOwner = viewLifecycleOwner
 
         //shows appbar on dashboard screen
         (activity as AppCompatActivity).supportActionBar?.show()
+        setHasOptionsMenu(true)
 
         binding.btnOpenDetail.setOnClickListener {
             /** Navigate to Detail Page **/
@@ -41,6 +41,21 @@ class DashboardFragment : Fragment() {
 
         Timber.d("DashboardFragment created..")
         return binding.root
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        inflater.inflate(R.menu.action_bar_menu, menu)
+        super.onCreateOptionsMenu(menu,inflater)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        if (item.itemId == R.id.action_menu_log_out) {
+            /** initiate log out action here **/
+            SnackBar.makeLarge(binding.root, "Logging out..", SnackBar.LENGTH_LONG).show()
+            return true
+        }
+
+        return super.onOptionsItemSelected(item)
     }
 
 }
