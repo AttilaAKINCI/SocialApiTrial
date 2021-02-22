@@ -11,8 +11,10 @@ import androidx.navigation.fragment.NavHostFragment
 import com.akinci.socialapitrial.R
 import com.akinci.socialapitrial.common.component.SnackBar
 import com.akinci.socialapitrial.databinding.FragmentDashboardBinding
+import dagger.hilt.android.AndroidEntryPoint
 import timber.log.Timber
 
+@AndroidEntryPoint
 class UserListFragment : Fragment() {
     lateinit var binding: FragmentDashboardBinding
 

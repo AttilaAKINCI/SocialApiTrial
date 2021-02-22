@@ -3,7 +3,11 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <data />
+    <data>
+        <variable
+            name="vm"
+            type="com.akinci.socialapitrial.feature.login.viewmodel.LoginViewModel"/>
+    </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -48,7 +52,8 @@
             android:layout_marginBottom="@dimen/margin_default_x3"
             android:layout_marginStart="@dimen/activity_horizontal_margin"
             android:layout_marginEnd="@dimen/activity_horizontal_margin"
-            android:text="@string/action_sign_in"/>
+            android:text="@string/action_sign_in"
+            android:onClick="@{() -> vm.actionSignInWithTwitter()}"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

@@ -8,8 +8,10 @@ import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import com.akinci.socialapitrial.R
 import com.akinci.socialapitrial.databinding.FragmentDetailBinding
+import dagger.hilt.android.AndroidEntryPoint
 import timber.log.Timber
 
+@AndroidEntryPoint
 class UserDetailFragment : Fragment() {
     lateinit var binding: FragmentDetailBinding
 
