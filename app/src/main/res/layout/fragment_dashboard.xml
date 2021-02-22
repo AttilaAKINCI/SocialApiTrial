@@ -10,12 +10,12 @@
         android:layout_height="match_parent"
         android:gravity="center_horizontal"
         android:orientation="vertical"
-        tools:context=".feature.dashboard.view.DashboardFragment">
+        tools:context=".feature.dashboard.userlist.view.UserListFragment">
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:text="@string/desc_dashboard" />
+            android:text="@string/desc_user_list" />
 
         <Button
             android:id="@+id/btn_open_detail"
@@ -28,7 +28,7 @@
             android:layout_marginBottom="@dimen/margin_default_x3"
             android:layout_marginStart="@dimen/activity_horizontal_margin"
             android:layout_marginEnd="@dimen/activity_horizontal_margin"
-            android:text="@string/action_open_detail"/>
+            android:text="@string/action_open_user_detail"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

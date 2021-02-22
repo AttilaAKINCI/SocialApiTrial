@@ -11,14 +11,14 @@ android {
     buildToolsVersion "30.0.3"
 
     defaultConfig {
-        applicationId "com.akinci.twitterapitrial"
+        applicationId "com.akinci.socialapitrial"
         minSdkVersion 23
         targetSdkVersion 30
         versionCode 1
         versionName "1.0"
         multiDexEnabled true
 
-        testInstrumentationRunner "com.akinci.twitterapitrial.HiltTestRunner"
+        testInstrumentationRunner "com.akinci.socialapitrial.HiltTestRunner"
     }
 
     buildTypes {

@@ -9,12 +9,12 @@
         android:layout_height="match_parent"
         android:gravity="center_horizontal"
         android:orientation="vertical"
-        tools:context=".feature.detail.view.DetailFragment">
+        tools:context=".feature.dashboard.userdetail.view.UserDetailFragment">
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:text="@string/desc_detail" />
+            android:text="@string/desc_user_detail" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

@@ -10,7 +10,7 @@
         android:layout_height="match_parent"
         android:gravity="center_horizontal"
         android:orientation="vertical"
-        tools:context=".feature.splash.SplashFragment">
+        tools:context=".feature.login.view.SplashFragment">
 
         <com.airbnb.lottie.LottieAnimationView
             android:id="@+id/animation"

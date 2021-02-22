@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">TwitterApiTrial</string>
+    <string name="app_name">SocialApiTrial</string>
 
     <!-- Lottie files -->
     <string name="lottie_twitter">twitter-logo.json</string>
@@ -11,17 +11,22 @@
     <string name="desc_login">Welcome to Twitter Profiler App!!\n\nYou can trace your followers and following so much easily using this app.\n\nJust login with your twitter account and start using!! </string>
     <string name="action_sign_in">Login With Twitter</string>
 
-    <!--  Dashboard Fragment   -->
-    <string name="title_dashboard">Dashboard</string>
-    <string name="desc_dashboard">Dashboard Fragment</string>
-    <string name="action_open_detail">Open Detail</string>
+    <!--  User List Fragment   -->
+    <string name="title_user_list">User List</string>
+    <string name="desc_user_list">User List Fragment</string>
+    <string name="action_open_user_detail">Open User Detail</string>
 
-    <!--  Detail Fragment   -->
-    <string name="title_detail">Detail</string>
-    <string name="desc_detail">Detail Fragment</string>
+    <!--  User Detail Fragment   -->
+    <string name="title_user_detail">User Detail</string>
+    <string name="desc_user_detail">User Detail Fragment</string>
 
     <!--  Splash Fragment   -->
     <string name="title_splash">Splash</string>
     <string name="desc_splash">Splash Fragment</string>
+
+
+
+    <string name="title_activity_dashboard_root">DashboardRootActivity</string>
+    <string name="hello_world">Hello Square World!</string>
 
 </resources>
