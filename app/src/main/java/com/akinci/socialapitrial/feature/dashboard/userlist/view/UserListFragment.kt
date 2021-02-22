@@ -27,6 +27,8 @@ class UserListFragment : Fragment() {
 
         //shows appbar on dashboard screen
         (activity as AppCompatActivity).supportActionBar?.show()
+        // set title for first fragment. Probably there is a bug during first fragment initiation.
+        (activity as AppCompatActivity).supportActionBar?.title = resources.getString(R.string.title_user_list)
         setHasOptionsMenu(true)
 
         binding.btnOpenDetail.setOnClickListener {
