@@ -79,8 +79,31 @@ class LoginViewModel @Inject constructor(
         /** STEP 3. GET ACCESS TOKEN **/
         Timber.d("Access Token will be fetched")
 
-        // simulate access token acquired. TODO fix it later.
-        _loginEventHandler.postValue(Event(Resource.Success(true)))
+        viewModelScope.launch {
+            val oAuthToken = sharedPreferences.getStoredTag(LocalPreferenceConfig.OAUTH_TOKEN) ?: ""
+            val oAuthTokenVerifier = sharedPreferences.getStoredTag(LocalPreferenceConfig.OAUTH_TOKEN_VERIFIER) ?: ""
 
+            when(val accessTokenResponse = loginRepository.getAccessToken(oAuthToken, oAuthTokenVerifier)){
+                is Resource.Success -> {
+                    // access token service is completed..
+                    accessTokenResponse.data?.let{
+                        Timber.d("Access token has been acquired.")
+                        sharedPreferences.setStoredTag(LocalPreferenceConfig.ACCESS_TOKEN, it.oauth_token)
+                        sharedPreferences.setStoredTag(LocalPreferenceConfig.ACCESS_TOKEN_SECRET, it.oauth_token_secret)
+                        sharedPreferences.setStoredTag(LocalPreferenceConfig.USER_ID, it.user_id)
+                        sharedPreferences.setStoredTag(LocalPreferenceConfig.USER_NAME, it.screen_name)
+                        sharedPreferences.setStoredTag(LocalPreferenceConfig.IS_LOGGED_IN, "1")
+
+                        Timber.d("Access token service has been completed.")
+                        _loginEventHandler.postValue(Event(Resource.Success(true)))
+                    } ?: _loginEventHandler.postValue(Event(Resource.Error("Access token response data is null")))
+                }
+                is Resource.Error -> {
+                    // request token service encountered an error.
+                    _loginEventHandler.postValue(Event(Resource.Error(accessTokenResponse.message)))
+                }
+            }
+        }
     }
+
 }

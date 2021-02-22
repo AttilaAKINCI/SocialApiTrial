@@ -1,9 +1,11 @@
 package com.akinci.socialapitrial.feature.login.di
 
 import android.content.Context
+import android.content.SharedPreferences
 import com.akinci.socialapitrial.BuildConfig
 import com.akinci.socialapitrial.common.network.NetworkChecker
 import com.akinci.socialapitrial.common.network.RestConfig
+import com.akinci.socialapitrial.common.storage.Preferences
 import com.akinci.socialapitrial.feature.login.data.api.LoginServiceDao
 import com.akinci.socialapitrial.feature.login.repository.LoginRepository
 import com.akinci.socialapitrial.feature.login.repository.LoginRepositoryImpl
@@ -51,6 +53,7 @@ object LoginModule {
         }
 
         val authSigner = OkHttpOAuthConsumer(BuildConfig.CONSUMER_KEY, BuildConfig.CONSUMER_SECRET)
+        //authSigner.setTokenWithSecret("","")
         return builder
             .addInterceptor(SigningInterceptor(authSigner))
             .readTimeout(100, TimeUnit.SECONDS)
@@ -81,8 +84,9 @@ object LoginModule {
     @Singleton
     fun provideLoginRepository(
         loginServiceDao: LoginServiceDao,
-        networkChecker: NetworkChecker
-    ): LoginRepository = LoginRepositoryImpl(loginServiceDao, networkChecker)
+        networkChecker: NetworkChecker,
+        sharedPreferences: Preferences
+    ): LoginRepository = LoginRepositoryImpl(loginServiceDao, networkChecker, sharedPreferences)
 
     /** END **/
 
