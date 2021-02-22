@@ -49,24 +49,37 @@ class LoginFragment : Fragment() {
         binding.lifecycleOwner = viewLifecycleOwner
         binding.vm = loginViewModel
 
-        binding.btnSignIn.setOnClickListener{
-            /** Navigate to DashBoard Page **/
-            SnackBar.makeLarge(binding.root, "Twitter Login Clicked", SnackBar.LENGTH_LONG).show()
-
-            Handler(Looper.getMainLooper()).postDelayed({
-                /** remove login flow from back stack and start secure dashboard flow. **/
-                val intent = Intent(activity, DashboardRootActivity::class.java)
-                startActivity(intent)
-                activity?.finish()
-            }, 1000)
-        }
-
         Timber.d("LoginFragment created..")
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        loginViewModel.loginEventHandler.observe(viewLifecycleOwner, { event ->
+            // only one time consume this event
+            val content = event.getContentIfNotHandled()
+            content?.let {
+                when (it) {
+                    is Resource.Success -> {
+                        // access token is acquired. Proceed to Dashboard.
+                        /** Navigate to DashBoard Page **/
+                        SnackBar.makeLarge(binding.root, "Access token is acquired. Proceed to Dashboard", SnackBar.LENGTH_LONG).show()
+
+                        Handler(Looper.getMainLooper()).postDelayed({
+                            /** remove login flow from back stack and start secure dashboard flow. **/
+                            val intent = Intent(activity, DashboardRootActivity::class.java)
+                            startActivity(intent)
+                            activity?.finish()
+                        }, 1000)
+                    }
+                    is Resource.Error -> {
+                        // show error message on snackBar
+                        SnackBar.makeLarge(binding.root, it.message, SnackBar.LENGTH_LONG).show()
+                    }
+                }
+            }
+        })
 
         loginViewModel.authorizeEventHandler.observe(viewLifecycleOwner, { event ->
             // only one time consume this event
