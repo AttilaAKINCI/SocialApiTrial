@@ -6,5 +6,10 @@ class RestConfig {
         const val REQUEST_TOKEN_URL = "oauth/request_token"
         const val AUTHORIZE_URL = "oauth/authorize"
         const val REQUEST_ACCESS_TOKEN = "oauth/access_token"
+
+        const val REQUEST_SIGN_OUT = "1.1/oauth/invalidate_token"
+        const val REQUEST_FETCH_FOLLOWERS = "1.1/followers/list.json"
+        const val REQUEST_FETCH_FOLLOWINGS = "1.1/friends/list.json"
+        const val REQUEST_GET_USER_INFO = "1.1/users/show.json"
     }
 }

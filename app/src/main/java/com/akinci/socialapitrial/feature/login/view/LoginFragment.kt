@@ -23,7 +23,7 @@ import com.akinci.socialapitrial.common.helper.Resource
 import com.akinci.socialapitrial.common.storage.LocalPreferenceConfig
 import com.akinci.socialapitrial.common.storage.Preferences
 import com.akinci.socialapitrial.databinding.FragmentLoginBinding
-import com.akinci.socialapitrial.feature.dashboard.DashboardRootActivity
+import com.akinci.socialapitrial.feature.secure.DashboardRootActivity
 import com.akinci.socialapitrial.feature.login.viewmodel.LoginViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import timber.log.Timber
@@ -64,7 +64,7 @@ class LoginFragment : Fragment() {
                     is Resource.Success -> {
                         // access token is acquired. Proceed to Dashboard.
                         /** Navigate to DashBoard Page **/
-                        SnackBar.makeLarge(binding.root, "Access token is acquired. Proceed to Dashboard", SnackBar.LENGTH_LONG).show()
+                        SnackBar.makeLarge(binding.root, it.data.toString(), SnackBar.LENGTH_LONG).show()
 
                         Handler(Looper.getMainLooper()).postDelayed({
                             /** remove login flow from back stack and start secure dashboard flow. **/
@@ -90,7 +90,7 @@ class LoginFragment : Fragment() {
                         // request Token service is successful, I can navigate user to
                         // authorize page.
                         it.data?.let { data ->
-                            SnackBar.make(binding.root, "Authorize: $data", SnackBar.LENGTH_LONG).show()
+                            Timber.d("Authorize: $data")
                             setupTwitterWebViewDialog(data)
                         }
                     }
@@ -141,7 +141,7 @@ class LoginFragment : Fragment() {
             val oauthVerifier = uri.getQueryParameter("oauth_verifier") ?: ""
 
             sharedPreferences.setStoredTag(LocalPreferenceConfig.OAUTH_TOKEN_VERIFIER, oauthVerifier)
-            SnackBar.make(binding.root, "AuthVerifier : $oauthVerifier", SnackBar.LENGTH_LONG).show()
+            Timber.d("AuthVerifier URL: $oauthVerifier")
 
             //call access token service in VM.
             loginViewModel.getAccessToken()

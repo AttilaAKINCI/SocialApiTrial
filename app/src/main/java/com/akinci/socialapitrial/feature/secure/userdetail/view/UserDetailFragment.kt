@@ -1,4 +1,4 @@
-package com.akinci.socialapitrial.feature.dashboard.userdetail.view
+package com.akinci.socialapitrial.feature.secure.userdetail.view
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment

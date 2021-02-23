@@ -32,10 +32,6 @@ object LoginModule {
      * START
      * **/
     @Provides
-    @Named("BaseURL")
-    fun provideBaseUrl() = RestConfig.API_BASE_URL
-
-    @Provides
     @Singleton
     @Named("LoginOkHttpClient")
     fun provideRestOkHttpClient(
@@ -53,7 +49,6 @@ object LoginModule {
         }
 
         val authSigner = OkHttpOAuthConsumer(BuildConfig.CONSUMER_KEY, BuildConfig.CONSUMER_SECRET)
-        //authSigner.setTokenWithSecret("","")
         return builder
             .addInterceptor(SigningInterceptor(authSigner))
             .readTimeout(100, TimeUnit.SECONDS)
@@ -84,9 +79,8 @@ object LoginModule {
     @Singleton
     fun provideLoginRepository(
         loginServiceDao: LoginServiceDao,
-        networkChecker: NetworkChecker,
-        sharedPreferences: Preferences
-    ): LoginRepository = LoginRepositoryImpl(loginServiceDao, networkChecker, sharedPreferences)
+        networkChecker: NetworkChecker
+    ): LoginRepository = LoginRepositoryImpl(loginServiceDao, networkChecker)
 
     /** END **/
 

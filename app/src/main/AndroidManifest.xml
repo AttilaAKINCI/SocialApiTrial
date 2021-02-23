@@ -22,7 +22,7 @@
         </activity>
 
         <activity
-            android:name="com.akinci.socialapitrial.feature.dashboard.DashboardRootActivity"
+            android:name="com.akinci.socialapitrial.feature.secure.DashboardRootActivity"
             android:label="@string/title_activity_dashboard_root" />
     </application>
 

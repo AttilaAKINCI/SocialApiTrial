@@ -6,7 +6,7 @@
 
     <fragment
         android:id="@+id/dashboardFragment"
-        android:name="com.akinci.socialapitrial.feature.dashboard.userlist.view.UserListFragment"
+        android:name="com.akinci.socialapitrial.feature.secure.userlist.view.UserListFragment"
         android:label="@string/title_user_list" >
         <action
             android:id="@+id/action_dashboardFragment_to_detailFragment"
@@ -18,6 +18,6 @@
     </fragment>
     <fragment
         android:id="@+id/detailFragment"
-        android:name="com.akinci.socialapitrial.feature.dashboard.userdetail.view.UserDetailFragment"
+        android:name="com.akinci.socialapitrial.feature.secure.userdetail.view.UserDetailFragment"
         android:label="@string/title_user_detail" />
 </navigation>

@@ -3,14 +3,18 @@
     xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <data />
+    <data>
+        <variable
+            name="vm"
+            type="com.akinci.socialapitrial.feature.secure.userlist.viewModel.UserListViewModel"/>
+    </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:gravity="center_horizontal"
         android:orientation="vertical"
-        tools:context=".feature.dashboard.userlist.view.UserListFragment">
+        tools:context=".feature.secure.userlist.view.UserListFragment">
 
         <TextView
             android:layout_width="match_parent"

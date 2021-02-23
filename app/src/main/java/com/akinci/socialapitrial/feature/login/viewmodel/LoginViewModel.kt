@@ -24,8 +24,8 @@ class LoginViewModel @Inject constructor(
     val isLoggedIn = MutableLiveData(false)
 
     // after access token service, this event is fired in order to proceed dashboard.
-    private val _loginEventHandler = MutableLiveData<Event<Resource<Boolean>>>()
-    val loginEventHandler : LiveData<Event<Resource<Boolean>>> = _loginEventHandler
+    private val _loginEventHandler = MutableLiveData<Event<Resource<String>>>()
+    val loginEventHandler : LiveData<Event<Resource<String>>> = _loginEventHandler
 
     // authorizeEventHandler sends event feedback to UI layer(Fragment)
     private val _authorizeEventHandler = MutableLiveData<Event<Resource<String>>>()
@@ -42,7 +42,7 @@ class LoginViewModel @Inject constructor(
     fun actionSignInWithTwitter() {
         if(isLoggedIn.value!!){
             /** Already logged in proceed to dashboard. **/
-            _loginEventHandler.postValue(Event(Resource.Success(true)))
+            _loginEventHandler.postValue(Event(Resource.Success("User already logged-in")))
         }else{
             /** 3 Legged login steps... **/
             viewModelScope.launch {
@@ -95,7 +95,7 @@ class LoginViewModel @Inject constructor(
                         sharedPreferences.setStoredTag(LocalPreferenceConfig.IS_LOGGED_IN, "1")
 
                         Timber.d("Access token service has been completed.")
-                        _loginEventHandler.postValue(Event(Resource.Success(true)))
+                        _loginEventHandler.postValue(Event(Resource.Success("Access token is acquired. Proceed to Dashboard")))
                     } ?: _loginEventHandler.postValue(Event(Resource.Error("Access token response data is null")))
                 }
                 is Resource.Error -> {

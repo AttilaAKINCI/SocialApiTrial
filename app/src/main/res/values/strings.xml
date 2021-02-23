@@ -13,8 +13,8 @@
     <string name="action_proceed">Proceed to Dashboard</string>
 
     <!--  User List Fragment   -->
-    <string name="title_user_list">User List</string>
-    <string name="desc_user_list">User List Fragment</string>
+    <string name="title_user_list">Community</string>
+    <string name="desc_user_list">Community Fragment</string>
     <string name="action_open_user_detail">Open User Detail</string>
 
     <!--  User Detail Fragment   -->

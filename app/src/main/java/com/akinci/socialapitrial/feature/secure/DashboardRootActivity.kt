@@ -1,4 +1,4 @@
-package com.akinci.socialapitrial.feature.dashboard
+package com.akinci.socialapitrial.feature.secure
 
 import android.os.Bundle
 import com.akinci.socialapitrial.R
