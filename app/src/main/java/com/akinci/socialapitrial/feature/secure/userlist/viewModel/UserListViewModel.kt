@@ -46,9 +46,9 @@ class UserListViewModel @Inject constructor(
     /** Called when UserListFragment created. **/
     fun fetchInitialDashboardData(){
         // fetch each data if it's not fetched before
-        if(userInfo.value == null){ getUserInfo() }
-        if(followers.value == null){ getFollowers() }
-        if(friends.value == null){ getFollowings() }
+       //   if(userInfo.value == null){ getUserInfo() }
+      //  if(followers.value == null){ getFollowers() }
+      //  if(friends.value == null){ getFollowings() }
     }
 
     private fun getFollowers(){
@@ -58,7 +58,7 @@ class UserListViewModel @Inject constructor(
                     // followers response fetched
                     Timber.d("Followers list is fetched...")
                     followersCursor = followersResponse.data?.next_cursor ?: -1L
-                    followers.value = followersResponse.data?.userResponses
+                    followers.value = followersResponse.data?.users
                 }
                 is Resource.Error -> {
                     // error occurred while fetching followers
@@ -76,7 +76,7 @@ class UserListViewModel @Inject constructor(
                     // following response fetched
                     Timber.d("Followings list is fetched...")
                     followingsCursor = followingsResponse.data?.next_cursor ?: -1L
-                    friends.value = followingsResponse.data?.userResponses
+                    friends.value = followingsResponse.data?.users
                 }
                 is Resource.Error -> {
                     // error occurred while fetching followings
@@ -92,7 +92,7 @@ class UserListViewModel @Inject constructor(
             val userName = sharedPreferences.getStoredTag(LocalPreferenceConfig.USER_NAME) ?: ""
 
             if(userId.isNotEmpty() && userName.isNotEmpty()){
-                when(val userResponse = userListRepository.getUserInfo(userId.toInt(), userName)) {
+                when(val userResponse = userListRepository.getUserInfo(userId.toLong(), userName)) {
                     is Resource.Success -> {
                         // user info is fetched
                         Timber.d("User info is fetched...")

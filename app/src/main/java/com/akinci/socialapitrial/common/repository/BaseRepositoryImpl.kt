@@ -33,6 +33,7 @@ open class BaseRepositoryImpl constructor(
                 }
             }else{
                 // not connected to internet
+                Timber.d("Couldn't reached to server. Please check your internet connection")
                 Resource.Error("Couldn't reached to server. Please check your internet connection")
             }
         }catch (ex: Exception){
@@ -64,6 +65,7 @@ open class BaseRepositoryImpl constructor(
                 }
             }else{
                 // not connected to internet
+                Timber.d("Couldn't reached to server. Please check your internet connection")
                 Resource.Error("Couldn't reached to server. Please check your internet connection")
             }
         }catch (ex: Exception){

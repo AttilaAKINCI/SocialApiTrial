@@ -11,5 +11,7 @@ class RestConfig {
         const val REQUEST_FETCH_FOLLOWERS = "1.1/followers/list.json"
         const val REQUEST_FETCH_FOLLOWINGS = "1.1/friends/list.json"
         const val REQUEST_GET_USER_INFO = "1.1/users/show.json"
+
+        const val REQUEST_GET_TIME_LINE = " 1.1/statuses/user_timeline.json"
     }
 }

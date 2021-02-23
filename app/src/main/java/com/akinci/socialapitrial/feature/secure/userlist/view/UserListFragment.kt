@@ -47,19 +47,24 @@ class UserListFragment : Fragment() {
             SnackBar.makeLarge(binding.root, "Navigating to detail page", SnackBar.LENGTH_LONG).show()
 
             Handler(Looper.getMainLooper()).postDelayed({
-                NavHostFragment.findNavController(this).navigate(R.id.action_dashboardFragment_to_detailFragment)
+                NavHostFragment.findNavController(this).navigate(
+                        UserListFragmentDirections.actionDashboardFragmentToDetailFragment(728900207782592512),
+                        null)
             }, 1000)
         }
 
-        Timber.d("DashboardFragment created..")
+        Timber.d("UserListFragment created..")
         return binding.root
+    }
+
+    override fun onStart() {
+        super.onStart()
+        //fetch initial data
+        userListViewModel.fetchInitialDashboardData()
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        // fetch dashboard data
-        userListViewModel.fetchInitialDashboardData()
 
         userListViewModel.eventHandler.observe(viewLifecycleOwner, { event ->
             // only one time consume this event

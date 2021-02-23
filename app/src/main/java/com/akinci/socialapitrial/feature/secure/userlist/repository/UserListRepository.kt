@@ -9,5 +9,5 @@ interface UserListRepository {
     suspend fun signOut(): Resource<SignOutResponse>
     suspend fun fetchFollowers(cursor : Long): Resource<FollowerOrFriendResponse>
     suspend fun fetchFollowings(cursor : Long): Resource<FollowerOrFriendResponse>
-    suspend fun getUserInfo(userId: Int, userName: String): Resource<UserResponse>
+    suspend fun getUserInfo(userId: Long, userName: String): Resource<UserResponse>
 }

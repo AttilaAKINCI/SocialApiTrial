@@ -25,8 +25,7 @@ interface UserListServiceDao {
 
     @GET(RestConfig.REQUEST_GET_USER_INFO)
     suspend fun getUserInfo(
-            @Query("user_id") userId : Int,
+            @Query("user_id") userId : Long,
             @Query("screen_name") screenName : String
     ) : Response<UserResponse>
-
 }

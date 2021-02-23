@@ -18,7 +18,8 @@
     <string name="action_open_user_detail">Open User Detail</string>
 
     <!--  User Detail Fragment   -->
-    <string name="title_user_detail">User Detail</string>
+    <string name="title_user_detail">TimeLine</string>
+    <string name="title_user_detail_param">%1$s\'s TimeLine</string>
     <string name="desc_user_detail">User Detail Fragment</string>
 
     <!--  Splash Fragment   -->

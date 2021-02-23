@@ -2,7 +2,11 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <data />
+    <data>
+        <variable
+            name="vm"
+            type="com.akinci.socialapitrial.feature.secure.userdetail.viewmodel.UserDetailViewModel"/>
+    </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"

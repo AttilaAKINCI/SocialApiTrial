@@ -23,7 +23,7 @@ class UserListRepositoryImpl @Inject constructor(
         return callService { userListServiceDao.fetchFriends(cursor) }
     }
 
-    override suspend fun getUserInfo(userId: Int, userName: String): Resource<UserResponse> {
+    override suspend fun getUserInfo(userId: Long, userName: String): Resource<UserResponse> {
         return callService { userListServiceDao.getUserInfo(userId, userName) }
     }
 
