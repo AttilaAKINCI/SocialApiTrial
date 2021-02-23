@@ -46,7 +46,8 @@ class UserListViewModel @Inject constructor(
     /** Called when UserListFragment created. **/
     fun fetchInitialDashboardData(){
         // fetch each data if it's not fetched before
-       //   if(userInfo.value == null){ getUserInfo() }
+      // TODO here closed so as to prevent twitter api abuse while development
+      //   if(userInfo.value == null){ getUserInfo() }
       //  if(followers.value == null){ getFollowers() }
       //  if(friends.value == null){ getFollowings() }
     }
