@@ -1,7 +1,6 @@
 package com.akinci.socialapitrial.feature.secure.userlist.di
 
 import com.akinci.socialapitrial.common.network.NetworkChecker
-import com.akinci.socialapitrial.common.storage.Preferences
 import com.akinci.socialapitrial.feature.secure.userlist.data.api.UserListServiceDao
 import com.akinci.socialapitrial.feature.secure.userlist.repository.UserListRepository
 import com.akinci.socialapitrial.feature.secure.userlist.repository.UserListRepositoryImpl
@@ -27,7 +26,6 @@ object UserListModule {
     @Singleton
     fun provideUserListRepository(
             userListServiceDao: UserListServiceDao,
-            networkChecker: NetworkChecker,
-            sharedPreferences: Preferences
-    ): UserListRepository = UserListRepositoryImpl(userListServiceDao, networkChecker, sharedPreferences)
+            networkChecker: NetworkChecker
+    ): UserListRepository = UserListRepositoryImpl(userListServiceDao, networkChecker)
 }

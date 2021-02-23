@@ -1,6 +1,6 @@
 package com.akinci.socialapitrial.feature.secure.userlist.data.output.follower
 
-data class User(
+data class UserResponse(
     val id: Int,
     val name: String,
     val screen_name: String,

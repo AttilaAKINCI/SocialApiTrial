@@ -8,6 +8,8 @@ import com.akinci.socialapitrial.common.helper.Event
 import com.akinci.socialapitrial.common.helper.Resource
 import com.akinci.socialapitrial.common.storage.LocalPreferenceConfig
 import com.akinci.socialapitrial.common.storage.Preferences
+import com.akinci.socialapitrial.feature.secure.userlist.data.output.follower.FollowerOrFriendResponse
+import com.akinci.socialapitrial.feature.secure.userlist.data.output.follower.UserResponse
 import com.akinci.socialapitrial.feature.secure.userlist.repository.UserListRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
@@ -24,7 +26,14 @@ class UserListViewModel @Inject constructor(
     private val _signOutEventHandler = MutableLiveData<Event<Resource<String>>>()
     val signOutEventHandler : LiveData<Event<Resource<String>>> = _signOutEventHandler
 
+    // user info
+    var userInfo = MutableLiveData<UserResponse>()
 
+    // follower list
+    var followers = MutableLiveData<List<UserResponse>>()
+
+    // friend list
+    var friends = MutableLiveData<List<UserResponse>>()
 
     init {
         Timber.d("UserListViewModel created..")
@@ -47,7 +56,22 @@ class UserListViewModel @Inject constructor(
     }
 
     private fun getUserInfo(){
+        viewModelScope.launch {
+            val userId = sharedPreferences.getStoredTag(LocalPreferenceConfig.USER_ID) ?: ""
+            val userName = sharedPreferences.getStoredTag(LocalPreferenceConfig.USER_NAME) ?: ""
 
+            if(userId.isNotEmpty() && userName.isNotEmpty()){
+                when(val userResponse = userListRepository.getUserInfo(userId.toInt(), userName)) {
+                    is Resource.Success -> {
+                        // user info is fetched
+                    }
+                    is Resource.Error -> {
+                        // error occurred while fetching user info
+
+                    }
+                }
+            }
+        }
     }
 
     /** bind to sign out button. **/
