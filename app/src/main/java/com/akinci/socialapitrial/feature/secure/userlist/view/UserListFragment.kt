@@ -59,9 +59,9 @@ class UserListFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         // fetch dashboard data
-        userListViewModel.fetchDashboardData()
+        userListViewModel.fetchInitialDashboardData()
 
-        userListViewModel.signOutEventHandler.observe(viewLifecycleOwner, { event ->
+        userListViewModel.eventHandler.observe(viewLifecycleOwner, { event ->
             // only one time consume this event
             val content = event.getContentIfNotHandled()
             content?.let {
@@ -84,7 +84,6 @@ class UserListFragment : Fragment() {
                 }
             }
         })
-
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {

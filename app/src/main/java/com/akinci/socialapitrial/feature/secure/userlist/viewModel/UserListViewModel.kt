@@ -22,17 +22,21 @@ class UserListViewModel @Inject constructor(
         private val sharedPreferences: Preferences
 ) : ViewModel() {
 
-    // signOutEventHandler sends event feedback to UI layer(Fragment)
-    private val _signOutEventHandler = MutableLiveData<Event<Resource<String>>>()
-    val signOutEventHandler : LiveData<Event<Resource<String>>> = _signOutEventHandler
+    // eventHandler sends event feedback to UI layer(Fragment)
+    // success is used for sign out event
+    // error case is used for generic error passing
+    private val _eventHandler = MutableLiveData<Event<Resource<String>>>()
+    val eventHandler : LiveData<Event<Resource<String>>> = _eventHandler
 
     // user info
     var userInfo = MutableLiveData<UserResponse>()
 
     // follower list
+    private var followersCursor = -1L
     var followers = MutableLiveData<List<UserResponse>>()
 
     // friend list
+    private var followingsCursor = -1L
     var friends = MutableLiveData<List<UserResponse>>()
 
     init {
@@ -40,19 +44,46 @@ class UserListViewModel @Inject constructor(
     }
 
     /** Called when UserListFragment created. **/
-    fun fetchDashboardData(){
-        //TODO check data is fetched before......
-        getUserInfo()
-        getFollowers()
-        getFollowings()
+    fun fetchInitialDashboardData(){
+        // fetch each data if it's not fetched before
+        if(userInfo.value == null){ getUserInfo() }
+        if(followers.value == null){ getFollowers() }
+        if(friends.value == null){ getFollowings() }
     }
 
     private fun getFollowers(){
-
+        viewModelScope.launch {
+            when(val followersResponse = userListRepository.fetchFollowers(followersCursor)) {
+                is Resource.Success -> {
+                    // followers response fetched
+                    Timber.d("Followers list is fetched...")
+                    followersCursor = followersResponse.data?.next_cursor ?: -1L
+                    followers.value = followersResponse.data?.userResponses
+                }
+                is Resource.Error -> {
+                    // error occurred while fetching followers
+                    _eventHandler.postValue(Event(Resource.Error(followersResponse.message)))
+                }
+            }
+        }
     }
 
     private fun getFollowings(){
-
+        viewModelScope.launch {
+            val cursor = -1
+            when(val followingsResponse = userListRepository.fetchFollowings(followingsCursor)) {
+                is Resource.Success -> {
+                    // following response fetched
+                    Timber.d("Followings list is fetched...")
+                    followingsCursor = followingsResponse.data?.next_cursor ?: -1L
+                    friends.value = followingsResponse.data?.userResponses
+                }
+                is Resource.Error -> {
+                    // error occurred while fetching followings
+                    _eventHandler.postValue(Event(Resource.Error(followingsResponse.message)))
+                }
+            }
+        }
     }
 
     private fun getUserInfo(){
@@ -64,10 +95,12 @@ class UserListViewModel @Inject constructor(
                 when(val userResponse = userListRepository.getUserInfo(userId.toInt(), userName)) {
                     is Resource.Success -> {
                         // user info is fetched
+                        Timber.d("User info is fetched...")
+                        userInfo.value = userResponse.data!!
                     }
                     is Resource.Error -> {
                         // error occurred while fetching user info
-
+                        _eventHandler.postValue(Event(Resource.Error(userResponse.message)))
                     }
                 }
             }
@@ -93,17 +126,14 @@ class UserListViewModel @Inject constructor(
                         sharedPreferences.setStoredTag(LocalPreferenceConfig.IS_LOGGED_IN, "")
 
                         //Pass sign out action to fragment
-                        _signOutEventHandler.postValue(Event(Resource.Success("Signed out....")))
+                        _eventHandler.postValue(Event(Resource.Success("Signed out....")))
                     }
                 }
                 is Resource.Error -> {
                     // send signout error messages to fragment
-                    _signOutEventHandler.postValue(Event(Resource.Error(signOutResponse.message)))
+                    _eventHandler.postValue(Event(Resource.Error(signOutResponse.message)))
                 }
             }
         }
     }
-
-
-
 }

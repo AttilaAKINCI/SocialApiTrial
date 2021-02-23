@@ -15,12 +15,12 @@ interface UserListServiceDao {
 
     @GET(RestConfig.REQUEST_FETCH_FOLLOWERS)
     suspend fun fetchFollowers(
-            @Query("cursor") cursor : Int
+            @Query("cursor") cursor : Long
     ) : Response<FollowerOrFriendResponse>
 
     @GET(RestConfig.REQUEST_FETCH_FOLLOWINGS)
     suspend fun fetchFriends(
-            @Query("cursor") cursor : Int
+            @Query("cursor") cursor : Long
     ) : Response<FollowerOrFriendResponse>
 
     @GET(RestConfig.REQUEST_GET_USER_INFO)

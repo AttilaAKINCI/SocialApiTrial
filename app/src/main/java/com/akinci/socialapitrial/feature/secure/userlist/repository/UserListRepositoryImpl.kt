@@ -15,11 +15,11 @@ class UserListRepositoryImpl @Inject constructor(
         private val networkChecker: NetworkChecker
 ) : BaseRepositoryImpl(networkChecker), UserListRepository {
 
-    override suspend fun fetchFollowers(cursor : Int): Resource<FollowerOrFriendResponse> {
+    override suspend fun fetchFollowers(cursor : Long): Resource<FollowerOrFriendResponse> {
         return callService { userListServiceDao.fetchFollowers(cursor) }
     }
 
-    override suspend fun fetchFollowings(cursor : Int): Resource<FollowerOrFriendResponse> {
+    override suspend fun fetchFollowings(cursor : Long): Resource<FollowerOrFriendResponse> {
         return callService { userListServiceDao.fetchFriends(cursor) }
     }
 
