@@ -43,11 +43,14 @@ class UserDetailFragment : Fragment() {
         return binding.root
     }
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
-
+    override fun onStart() {
+        super.onStart()
         // fetch user time line
         if(userId != 0L){ userDetailViewModel.getUserTimeLine(userId) }
+    }
+
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        super.onActivityCreated(savedInstanceState)
 
         userDetailViewModel.eventHandler.observe(viewLifecycleOwner, { event ->
             // only one time consume this event
