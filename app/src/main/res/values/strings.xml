@@ -16,6 +16,8 @@
     <string name="title_user_list">Community</string>
     <string name="desc_user_list">Community Fragment</string>
     <string name="action_open_user_detail">Open User Detail</string>
+    <string name="tab1">Followers</string>
+    <string name="tab2">Friends</string>
 
     <!--  User Detail Fragment   -->
     <string name="title_user_detail">TimeLine</string>
@@ -27,8 +29,9 @@
     <string name="desc_splash">Splash Fragment</string>
 
 
-
     <string name="title_activity_dashboard_root">DashboardRootActivity</string>
     <string name="hello_world">Hello Square World!</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 
 </resources>

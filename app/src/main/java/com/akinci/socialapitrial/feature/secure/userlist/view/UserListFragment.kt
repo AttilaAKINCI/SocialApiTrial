@@ -15,8 +15,10 @@ import com.akinci.socialapitrial.common.component.SnackBar
 import com.akinci.socialapitrial.common.helper.Resource
 import com.akinci.socialapitrial.databinding.FragmentUserListBinding
 import com.akinci.socialapitrial.feature.login.LoginRootActivity
-import com.akinci.socialapitrial.feature.secure.DashboardRootActivity
+import com.akinci.socialapitrial.feature.secure.userlist.viewpager.FragmentAdapter
 import com.akinci.socialapitrial.feature.secure.userlist.viewModel.UserListViewModel
+import com.google.android.material.tabs.TabLayout
+import com.google.android.material.tabs.TabLayoutMediator
 import dagger.hilt.android.AndroidEntryPoint
 import timber.log.Timber
 
@@ -53,6 +55,17 @@ class UserListFragment : Fragment() {
             }, 1000)
         }
 
+        /** Setup View Pager **/
+        val fragmentViewPagerAdapter = FragmentAdapter(requireActivity())
+        binding.tabViewPager.adapter = fragmentViewPagerAdapter
+
+        TabLayoutMediator(binding.tabLayout, binding.tabViewPager) { tab, position ->
+            when(position){
+                0 -> { tab.text = context?.resources?.getString(R.string.tab1) }
+                1 -> { tab.text = context?.resources?.getString(R.string.tab2) }
+            }
+        }.attach()
+
         Timber.d("UserListFragment created..")
         return binding.root
     }
@@ -65,6 +78,15 @@ class UserListFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        binding.tabLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
+            override fun onTabSelected(tab: TabLayout.Tab?) { }
+            override fun onTabUnselected(tab: TabLayout.Tab?) { }
+            override fun onTabReselected(tab: TabLayout.Tab?) { }
+        })
+
+        /** followers and friends data is fetched so we can replace view pager now **/
+
 
         userListViewModel.eventHandler.observe(viewLifecycleOwner, { event ->
             // only one time consume this event
