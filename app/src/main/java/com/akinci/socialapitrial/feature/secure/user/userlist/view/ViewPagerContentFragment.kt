@@ -40,12 +40,12 @@ class ViewPagerContentFragment (
         binding.vm = viewPagerViewModel
 
         // recycler list adapter
-        userListAdapter = CommunityListAdapter(clickListener = { userId ->
+        userListAdapter = CommunityListAdapter(clickListener = { userId, screenName, name ->
             // catch user row clicks and navigate to user timeline (user detail) fragment
             Timber.d("Navigation to user timeline (user detail) fragment")
 
             NavHostFragment.findNavController(this).navigate(
-                    UserListFragmentDirections.actionDashboardFragmentToDetailFragment(userId),
+                    UserListFragmentDirections.actionDashboardFragmentToDetailFragment(userId, screenName, name),
                     null
             )
         })

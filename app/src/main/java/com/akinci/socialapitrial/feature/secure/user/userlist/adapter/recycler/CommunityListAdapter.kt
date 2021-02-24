@@ -9,7 +9,7 @@ import com.akinci.socialapitrial.common.component.GlideApp
 import com.akinci.socialapitrial.databinding.RowUserBinding
 import com.akinci.socialapitrial.feature.secure.user.data.output.userlist.UserResponse
 
-class CommunityListAdapter(private val clickListener: (Long) -> Unit) : ListAdapter<UserResponse, RecyclerView.ViewHolder>(UserDiffCallback()) {
+class CommunityListAdapter(private val clickListener: (Long, String, String) -> Unit) : ListAdapter<UserResponse, RecyclerView.ViewHolder>(UserDiffCallback()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         val layoutInflater = LayoutInflater.from(parent.context)
@@ -22,9 +22,9 @@ class CommunityListAdapter(private val clickListener: (Long) -> Unit) : ListAdap
     }
 
     class UserViewHolder(val binding: RowUserBinding) : RecyclerView.ViewHolder(binding.root) {
-        fun bind(data: UserResponse, clickListener: (Long) -> Unit) {
+        fun bind(data: UserResponse, clickListener: (Long, String, String) -> Unit) {
             // fill row instances..
-            binding.userCardView.setOnClickListener { clickListener.invoke(data.id) }
+            binding.userCardView.setOnClickListener { clickListener.invoke(data.id, data.screen_name, data.name) }
             binding.data = data
 
             data.profile_image_url_https?.let {
