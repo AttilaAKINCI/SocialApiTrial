@@ -5,7 +5,7 @@
     <data>
         <variable
             name="vm"
-            type="com.akinci.socialapitrial.feature.secure.userdetail.viewmodel.UserDetailViewModel"/>
+            type="com.akinci.socialapitrial.feature.secure.user.userdetail.viewmodel.UserDetailViewModel"/>
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -13,7 +13,7 @@
         android:layout_height="match_parent"
         android:gravity="center_horizontal"
         android:orientation="vertical"
-        tools:context=".feature.secure.userdetail.view.UserDetailFragment">
+        tools:context=".feature.secure.user.userdetail.view.UserDetailFragment">
 
         <TextView
             android:layout_width="match_parent"

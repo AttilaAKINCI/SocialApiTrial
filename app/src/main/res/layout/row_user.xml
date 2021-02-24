@@ -6,7 +6,7 @@
     <data>
         <variable
             name="data"
-            type="com.akinci.socialapitrial.feature.secure.userlist.data.output.community.UserResponse"/>
+            type="com.akinci.socialapitrial.feature.secure.user.data.output.userlist.UserResponse"/>
     </data>
 
     <RelativeLayout

@@ -6,13 +6,13 @@
     <data>
         <variable
             name="vm"
-            type="com.akinci.socialapitrial.feature.secure.userlist.viewModel.UserListViewModel"/>
+            type="com.akinci.socialapitrial.feature.secure.user.userlist.viewModel.UserListViewModel"/>
     </data>
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        tools:context=".feature.secure.userlist.view.UserListFragment">
+        tools:context=".feature.secure.user.userlist.view.UserListFragment">
 
         <RelativeLayout
             android:id="@+id/profile_part"
