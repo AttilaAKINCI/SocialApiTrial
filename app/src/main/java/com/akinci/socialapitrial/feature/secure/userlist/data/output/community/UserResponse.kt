@@ -1,4 +1,4 @@
-package com.akinci.socialapitrial.feature.secure.userlist.data.output.follower
+package com.akinci.socialapitrial.feature.secure.userlist.data.output.community
 
 import com.squareup.moshi.JsonClass
 

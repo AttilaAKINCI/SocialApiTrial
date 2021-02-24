@@ -3,10 +3,9 @@ package com.akinci.socialapitrial.feature.secure.userlist.repository
 import com.akinci.socialapitrial.common.helper.Resource
 import com.akinci.socialapitrial.common.network.NetworkChecker
 import com.akinci.socialapitrial.common.repository.BaseRepositoryImpl
-import com.akinci.socialapitrial.common.storage.Preferences
 import com.akinci.socialapitrial.feature.secure.userlist.data.api.UserListServiceDao
-import com.akinci.socialapitrial.feature.secure.userlist.data.output.follower.FollowerOrFriendResponse
-import com.akinci.socialapitrial.feature.secure.userlist.data.output.follower.UserResponse
+import com.akinci.socialapitrial.feature.secure.userlist.data.output.community.FollowerOrFriendResponse
+import com.akinci.socialapitrial.feature.secure.userlist.data.output.community.UserResponse
 import com.akinci.socialapitrial.feature.secure.userlist.data.output.singout.SignOutResponse
 import javax.inject.Inject
 

@@ -1,4 +1,4 @@
-package com.akinci.socialapitrial.feature.secure.userlist.viewpager
+package com.akinci.socialapitrial.feature.secure.userlist.adapter.viewpager
 
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity

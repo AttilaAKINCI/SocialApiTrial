@@ -8,8 +8,7 @@ import com.akinci.socialapitrial.common.helper.Event
 import com.akinci.socialapitrial.common.helper.Resource
 import com.akinci.socialapitrial.common.storage.LocalPreferenceConfig
 import com.akinci.socialapitrial.common.storage.Preferences
-import com.akinci.socialapitrial.feature.secure.userlist.data.output.follower.FollowerOrFriendResponse
-import com.akinci.socialapitrial.feature.secure.userlist.data.output.follower.UserResponse
+import com.akinci.socialapitrial.feature.secure.userlist.data.output.community.UserResponse
 import com.akinci.socialapitrial.feature.secure.userlist.repository.UserListRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
@@ -23,68 +22,20 @@ class UserListViewModel @Inject constructor(
 ) : ViewModel() {
 
     // eventHandler sends event feedback to UI layer(Fragment)
-    // success is used for sign out event
-    // error case is used for generic error passing
     private val _eventHandler = MutableLiveData<Event<Resource<String>>>()
     val eventHandler : LiveData<Event<Resource<String>>> = _eventHandler
 
     // user info
     var userInfo = MutableLiveData<UserResponse>()
 
-    // follower list
-    private var followersCursor = -1L
-    var followers = MutableLiveData<List<UserResponse>>()
-
-    // friend list
-    private var followingsCursor = -1L
-    var friends = MutableLiveData<List<UserResponse>>()
-
     init {
         Timber.d("UserListViewModel created..")
     }
 
     /** Called when UserListFragment created. **/
-    fun fetchInitialDashboardData(){
+    fun fetchUserInfo(){
         // fetch each data if it's not fetched before
-      // TODO here closed so as to prevent twitter api abuse while development
-      //   if(userInfo.value == null){ getUserInfo() }
-      //  if(followers.value == null){ getFollowers() }
-      //  if(friends.value == null){ getFollowings() }
-    }
-
-    private fun getFollowers(){
-        viewModelScope.launch {
-            when(val followersResponse = userListRepository.fetchFollowers(followersCursor)) {
-                is Resource.Success -> {
-                    // followers response fetched
-                    Timber.d("Followers list is fetched...")
-                    followersCursor = followersResponse.data?.next_cursor ?: -1L
-                    followers.value = followersResponse.data?.users
-                }
-                is Resource.Error -> {
-                    // error occurred while fetching followers
-                    _eventHandler.postValue(Event(Resource.Error(followersResponse.message)))
-                }
-            }
-        }
-    }
-
-    private fun getFollowings(){
-        viewModelScope.launch {
-            val cursor = -1
-            when(val followingsResponse = userListRepository.fetchFollowings(followingsCursor)) {
-                is Resource.Success -> {
-                    // following response fetched
-                    Timber.d("Followings list is fetched...")
-                    followingsCursor = followingsResponse.data?.next_cursor ?: -1L
-                    friends.value = followingsResponse.data?.users
-                }
-                is Resource.Error -> {
-                    // error occurred while fetching followings
-                    _eventHandler.postValue(Event(Resource.Error(followingsResponse.message)))
-                }
-            }
-        }
+        if(userInfo.value == null){ getUserInfo() }
     }
 
     private fun getUserInfo(){

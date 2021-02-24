@@ -1,8 +1,8 @@
 package com.akinci.socialapitrial.feature.secure.userlist.data.api
 
 import com.akinci.socialapitrial.common.network.RestConfig
-import com.akinci.socialapitrial.feature.secure.userlist.data.output.follower.FollowerOrFriendResponse
-import com.akinci.socialapitrial.feature.secure.userlist.data.output.follower.UserResponse
+import com.akinci.socialapitrial.feature.secure.userlist.data.output.community.FollowerOrFriendResponse
+import com.akinci.socialapitrial.feature.secure.userlist.data.output.community.UserResponse
 import com.akinci.socialapitrial.feature.secure.userlist.data.output.singout.SignOutResponse
 import retrofit2.Response
 import retrofit2.http.GET

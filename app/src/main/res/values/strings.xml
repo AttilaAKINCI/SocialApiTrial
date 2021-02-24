@@ -18,6 +18,7 @@
     <string name="action_open_user_detail">Open User Detail</string>
     <string name="tab1">Followers</string>
     <string name="tab2">Friends</string>
+    <string name="accessibility_row_image">Community User Info</string>
 
     <!--  User Detail Fragment   -->
     <string name="title_user_detail">TimeLine</string>

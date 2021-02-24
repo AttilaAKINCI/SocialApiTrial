@@ -1,6 +1,6 @@
 package com.akinci.socialapitrial.feature.secure.userdetail.data.output
 
-import com.akinci.socialapitrial.feature.secure.userlist.data.output.follower.UserResponse
+import com.akinci.socialapitrial.feature.secure.userlist.data.output.community.UserResponse
 import com.squareup.moshi.JsonClass
 
 @JsonClass(generateAdapter = true)

@@ -9,15 +9,14 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.navigation.fragment.NavHostFragment
 import com.akinci.socialapitrial.R
+import com.akinci.socialapitrial.common.component.GlideApp
 import com.akinci.socialapitrial.common.component.SnackBar
 import com.akinci.socialapitrial.common.helper.Resource
 import com.akinci.socialapitrial.databinding.FragmentUserListBinding
 import com.akinci.socialapitrial.feature.login.LoginRootActivity
-import com.akinci.socialapitrial.feature.secure.userlist.viewpager.FragmentAdapter
+import com.akinci.socialapitrial.feature.secure.userlist.adapter.viewpager.FragmentAdapter
 import com.akinci.socialapitrial.feature.secure.userlist.viewModel.UserListViewModel
-import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 import dagger.hilt.android.AndroidEntryPoint
 import timber.log.Timber
@@ -44,17 +43,6 @@ class UserListFragment : Fragment() {
         (activity as AppCompatActivity).supportActionBar?.title = resources.getString(R.string.title_user_list)
         setHasOptionsMenu(true)
 
-        binding.btnOpenDetail.setOnClickListener {
-            /** Navigate to Detail Page **/
-            SnackBar.makeLarge(binding.root, "Navigating to detail page", SnackBar.LENGTH_LONG).show()
-
-            Handler(Looper.getMainLooper()).postDelayed({
-                NavHostFragment.findNavController(this).navigate(
-                        UserListFragmentDirections.actionDashboardFragmentToDetailFragment(728900207782592512),
-                        null)
-            }, 1000)
-        }
-
         /** Setup View Pager **/
         val fragmentViewPagerAdapter = FragmentAdapter(requireActivity())
         binding.tabViewPager.adapter = fragmentViewPagerAdapter
@@ -73,20 +61,31 @@ class UserListFragment : Fragment() {
     override fun onStart() {
         super.onStart()
         //fetch initial data
-        userListViewModel.fetchInitialDashboardData()
+        userListViewModel.fetchUserInfo()
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.tabLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
-            override fun onTabSelected(tab: TabLayout.Tab?) { }
-            override fun onTabUnselected(tab: TabLayout.Tab?) { }
-            override fun onTabReselected(tab: TabLayout.Tab?) { }
+        userListViewModel.userInfo.observe(viewLifecycleOwner, {
+
+            GlideApp.with(binding.userImage.context)
+                    .load(it.profile_image_url_https)
+                    .centerCrop()
+                    .placeholder(R.drawable.ic_person)
+                    .into(binding.userImage)
+
+            val backgroundImageUrl = it.profile_banner_url
+            if(!backgroundImageUrl.isNullOrEmpty()){
+                binding.profileBackgroundImage.visibility = View.VISIBLE
+                GlideApp.with(binding.profileBackgroundImage.context)
+                        .load(it.profile_banner_url)
+                        .centerCrop()
+                        .into(binding.profileBackgroundImage)
+            }else{
+                binding.profileBackgroundImage.visibility = View.GONE
+            }
         })
-
-        /** followers and friends data is fetched so we can replace view pager now **/
-
 
         userListViewModel.eventHandler.observe(viewLifecycleOwner, { event ->
             // only one time consume this event

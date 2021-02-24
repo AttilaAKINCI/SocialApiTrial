@@ -9,28 +9,51 @@
             type="com.akinci.socialapitrial.feature.secure.userlist.viewModel.UserListViewModel"/>
     </data>
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:gravity="center_horizontal"
-        android:orientation="vertical"
+        android:layout_height="wrap_content"
         tools:context=".feature.secure.userlist.view.UserListFragment">
 
-        <TextView
-            android:id="@+id/title"
+        <RelativeLayout
+            android:id="@+id/profile_part"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/desc_user_list"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintStart_toStartOf="parent"/>
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:id="@+id/profile_background_image"
+                android:layout_width="match_parent"
+                android:layout_height="100dp"
+                android:visibility="gone"
+                android:contentDescription="@string/accessibility_row_image" />
+
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/card_user_profile"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:cardCornerRadius="38dp"
+                android:layout_margin="10dp"
+                app:strokeWidth="1dp"
+                app:strokeColor="@color/white"
+                android:layout_alignParentStart="true"
+                android:layout_centerVertical="true">
+
+                <ImageView
+                    android:id="@+id/user_image"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:contentDescription="@string/accessibility_row_image"
+                    tools:visibility="visible"/>
+
+            </com.google.android.material.card.MaterialCardView>
+
+        </RelativeLayout>
 
         <LinearLayout
             android:id="@+id/tabLayoutContainer"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical"
-            app:layout_constraintTop_toBottomOf="@+id/title"
-            app:layout_constraintBottom_toBottomOf="parent">
+            android:layout_below="@+id/profile_part">
 
             <com.google.android.material.tabs.TabLayout
                 android:id="@+id/tabLayout"
@@ -43,18 +66,5 @@
                 android:layout_height="match_parent" />
         </LinearLayout>
 
-        <Button
-            android:id="@+id/btn_open_detail"
-            style="@style/Widget.Button.Colored.Rounded"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
-            android:layout_marginBottom="@dimen/margin_default_x3"
-            android:layout_marginStart="@dimen/activity_horizontal_margin"
-            android:layout_marginEnd="@dimen/activity_horizontal_margin"
-            android:text="@string/action_open_user_detail"/>
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
+    </RelativeLayout>
 </layout>
