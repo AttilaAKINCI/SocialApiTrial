@@ -1,5 +1,6 @@
 # SocialApiTrial
-SocialApiTrial is a proof of concept application of Twitter API services. 
+SocialApiTrial is a proof of concept application of Twitter API services without using any 3rd party twitter library. 
+Contains pure Twitter API refenrence integrations
 
 ## UI
 SocialApiTrial application consist of 5 different fragments and 2 root activity. Each root activity symbolize different flows of features 
