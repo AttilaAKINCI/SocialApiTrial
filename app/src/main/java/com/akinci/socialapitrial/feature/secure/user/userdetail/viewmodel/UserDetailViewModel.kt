@@ -27,7 +27,8 @@ class UserDetailViewModel @Inject constructor(
     private var userTimeLine = listOf<UserTimeLineResponse>()
 
     // user info
-    var userInfo = MutableLiveData<UserResponse>()
+    private val _userInfo = MutableLiveData<UserResponse>()
+    val userInfo : LiveData<UserResponse> = _userInfo
 
     init {
         Timber.d("UserDetailViewModel created..")
@@ -47,7 +48,7 @@ class UserDetailViewModel @Inject constructor(
                 is Resource.Success -> {
                     // user info is fetched
                     Timber.d("User info is fetched...")
-                    userInfo.value = userResponse.data!!
+                    _userInfo.value = userResponse.data!!
                 }
                 is Resource.Error -> {
                     // error occurred while fetching user info

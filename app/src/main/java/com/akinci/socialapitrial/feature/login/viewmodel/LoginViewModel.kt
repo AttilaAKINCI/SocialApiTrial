@@ -10,6 +10,7 @@ import com.akinci.socialapitrial.common.network.RestConfig
 import com.akinci.socialapitrial.common.storage.LocalPreferenceConfig
 import com.akinci.socialapitrial.common.storage.Preferences
 import com.akinci.socialapitrial.feature.login.repository.LoginRepository
+import com.akinci.socialapitrial.feature.secure.user.data.output.userlist.UserResponse
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import timber.log.Timber
@@ -21,7 +22,8 @@ class LoginViewModel @Inject constructor(
     private val sharedPreferences: Preferences
 ) : ViewModel() {
 
-    val isLoggedIn = MutableLiveData(false)
+    private val _isLoggedIn = MutableLiveData(false)
+    val isLoggedIn : LiveData<Boolean> = _isLoggedIn
 
     // after access token service, this event is fired in order to proceed dashboard.
     private val _loginEventHandler = MutableLiveData<Event<Resource<String>>>()
@@ -35,7 +37,7 @@ class LoginViewModel @Inject constructor(
         Timber.d("LoginViewModel created..")
 
         val loginState = sharedPreferences.getStoredTag(LocalPreferenceConfig.IS_LOGGED_IN)
-        isLoggedIn.value = loginState != ""
+        _isLoggedIn.value = loginState != ""
     }
 
     // connected to fragment_login sign-in button

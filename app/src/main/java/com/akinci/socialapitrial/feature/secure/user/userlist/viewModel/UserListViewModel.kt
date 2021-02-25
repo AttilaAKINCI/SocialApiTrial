@@ -28,7 +28,8 @@ class UserListViewModel @Inject constructor(
     val eventHandler : LiveData<Event<Resource<String>>> = _eventHandler
 
     // user info
-    var userInfo = MutableLiveData<UserResponse>()
+    private val _userInfo = MutableLiveData<UserResponse>()
+    val userInfo : LiveData<UserResponse> = _userInfo
 
     init {
         Timber.d("UserListViewModel created..")
@@ -50,7 +51,7 @@ class UserListViewModel @Inject constructor(
                     is Resource.Success -> {
                         // user info is fetched
                         Timber.d("User info is fetched...")
-                        userInfo.value = userResponse.data!!
+                        _userInfo.value = userResponse.data!!
                     }
                     is Resource.Error -> {
                         // error occurred while fetching user info
