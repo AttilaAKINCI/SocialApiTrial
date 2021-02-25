@@ -60,7 +60,7 @@ Necessary abstractions are applied so as to ensure injections and polymorphic us
 UI, ViewModel, Repository layers are separated and they communicate each other with the help of event base informer(Resource.kt). 
 
 ## Data sharing / storing for fragments
-In this task example, I have used activity scoped viewmodels in order to share / store data for fragments. Data is fetched one time at the beginning and used until activity is destroyed.
+In this task example, I have used fragment/activity scoped viewmodels in order to share / store data for fragments. For Activity scoped viewmodels hold data until activity is destroyed.
 There is no need for usage of local storage. (In this case ROOM database can be used.)
 
 ## Error Handling 
