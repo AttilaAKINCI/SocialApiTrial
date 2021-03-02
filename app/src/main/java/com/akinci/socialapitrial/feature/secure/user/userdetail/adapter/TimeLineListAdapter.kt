@@ -9,16 +9,17 @@ import androidx.recyclerview.widget.RecyclerView
 import com.akinci.socialapitrial.databinding.RowTimeLineBinding
 import com.akinci.socialapitrial.feature.secure.user.data.output.userdetail.UserTimeLineResponse
 
-class TimeLineListAdapter : ListAdapter<UserTimeLineResponse, RecyclerView.ViewHolder>(UserTimeLineItemDiffCallback()) {
+//TODO direk holder i pass edip castingi silebilirsin
+class TimeLineListAdapter : ListAdapter<UserTimeLineResponse, TimeLineListAdapter.UserTimeLineViewHolder>(UserTimeLineItemDiffCallback()) {
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): UserTimeLineViewHolder {
         val layoutInflater = LayoutInflater.from(parent.context)
         return UserTimeLineViewHolder(RowTimeLineBinding.inflate(layoutInflater, parent, false))
     }
 
-    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: UserTimeLineViewHolder, position: Int) {
         val item = getItem(position)
-        if(holder is UserTimeLineViewHolder) { holder.bind(item) }
+        holder.bind(item)
     }
 
     class UserTimeLineViewHolder(val binding: RowTimeLineBinding) : RecyclerView.ViewHolder(binding.root) {
@@ -26,17 +27,16 @@ class TimeLineListAdapter : ListAdapter<UserTimeLineResponse, RecyclerView.ViewH
             // fill row instances..
             binding.data = data
 
-            var hashTags = ""
-            data.entities?.hashtags?.map {
-                hashTags = "$hashTags #${it.text}"
-            }
-            if(hashTags.isNotEmpty()){
-                binding.hashTags.visibility = View.VISIBLE
-                binding.hashTags.text = hashTags.trimStart()
-            }else{
-                binding.hashTags.visibility = View.GONE
-            }
+            //TODO var yerine kotlin listlerin extensionlarini kullanabilirsin
+            // Trim Start a da gerek kalmaz
+            // Hashtag listesi null gelmiyor gibi sanki hic, empty list geliyor
+            val hashTags: String = if (data.entities?.hashtags?.isNotEmpty() == true) {
+                data.entities.hashtags.joinToString(separator = "#", prefix = "#") {
+                    "${it.text} "
+                }
+            } else ""
 
+            binding.hashTags.visibility = if (hashTags.isNotEmpty()) View.VISIBLE else View.GONE
             binding.executePendingBindings()
         }
     }

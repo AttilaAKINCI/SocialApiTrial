@@ -9,6 +9,7 @@ import com.akinci.socialapitrial.common.component.GlideApp
 import com.akinci.socialapitrial.databinding.RowUserBinding
 import com.akinci.socialapitrial.feature.secure.user.data.output.userlist.UserResponse
 
+// TODO UserViewHolder ile degistirebilirsin holderi
 class CommunityListAdapter(private val clickListener: (Long, String, String) -> Unit) : ListAdapter<UserResponse, RecyclerView.ViewHolder>(UserDiffCallback()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
@@ -28,6 +29,7 @@ class CommunityListAdapter(private val clickListener: (Long, String, String) -> 
             binding.data = data
 
             data.profile_image_url_https?.let {
+                //Bunu kullanimi baska yerlerde de var, extension yapabilirsin
                 GlideApp.with(binding.userImage.context)
                         .load(it)
                         .centerCrop()

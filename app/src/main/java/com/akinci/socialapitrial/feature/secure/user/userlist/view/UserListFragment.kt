@@ -49,8 +49,9 @@ class UserListFragment : Fragment() {
 
         TabLayoutMediator(binding.tabLayout, binding.tabViewPager) { tab, position ->
             when(position){
-                0 -> { tab.text = context?.resources?.getString(R.string.tab1) }
-                1 -> { tab.text = context?.resources?.getString(R.string.tab2) }
+                //TODO getString() kullanilabilir direk
+                0 -> { tab.text = getString(R.string.tab1) }
+                1 -> { tab.text = getString(R.string.tab2) }
             }
         }.attach()
 
@@ -96,6 +97,7 @@ class UserListFragment : Fragment() {
                         /** Sign out action **/
                         SnackBar.makeLarge(binding.root, "Signing out. Navigating to Login", SnackBar.LENGTH_LONG).show()
 
+                        //TODO Bunu view modelde delay(1000) kullanarak handle edebilirsin
                         Handler(Looper.getMainLooper()).postDelayed({
                             /** remove secure flow from back stack and start login dashboard flow. **/
                             val intent = Intent(activity, LoginRootActivity::class.java)

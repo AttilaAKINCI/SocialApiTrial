@@ -10,6 +10,7 @@ import retrofit2.http.Query
 
 interface UserServiceDao {
 
+    // TODO Su constant class a gerek var mi bilemedim
     @GET(RestConfig.REQUEST_GET_TIME_LINE)
     suspend fun getUserTimeLine(
             @Query("user_id") userId : Long,

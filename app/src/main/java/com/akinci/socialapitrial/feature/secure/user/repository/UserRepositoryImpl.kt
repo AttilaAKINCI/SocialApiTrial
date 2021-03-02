@@ -7,6 +7,7 @@ import com.akinci.socialapitrial.feature.secure.user.data.api.UserServiceDao
 import com.akinci.socialapitrial.feature.secure.user.data.output.userdetail.UserTimeLineResponse
 import com.akinci.socialapitrial.feature.secure.user.data.output.userlist.FollowerOrFriendResponse
 import com.akinci.socialapitrial.feature.secure.user.data.output.userlist.UserResponse
+import kotlinx.coroutines.delay
 import javax.inject.Inject
 
 class UserRepositoryImpl @Inject constructor(

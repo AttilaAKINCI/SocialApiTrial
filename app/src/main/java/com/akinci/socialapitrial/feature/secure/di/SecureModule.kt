@@ -18,6 +18,7 @@ import se.akerfeldt.okhttp.signpost.OkHttpOAuthConsumer
 import se.akerfeldt.okhttp.signpost.SigningInterceptor
 import java.util.concurrent.TimeUnit
 import javax.inject.Named
+import javax.inject.Qualifier
 import javax.inject.Singleton
 
 @Module
@@ -28,7 +29,7 @@ object SecureModule {
     @Singleton
     @Named("SecureOkHttpClient")
     fun provideRestOkHttpClient(
-            @ApplicationContext context: Context,
+            @ApplicationContext context: Context, //TODO context silinebilir
             sharedPreferences: Preferences
     ) : OkHttpClient {
         val builder = OkHttpClient.Builder()
@@ -61,6 +62,12 @@ object SecureModule {
     @Provides
     fun providesMoshi(): Moshi = Moshi.Builder().build()
 
+    //TODO Named yerine qualifier kullanabilirsin
+    /*
+    * @Qualifier
+      @Retention(AnnotationRetention.RUNTIME)
+      annotation class SecureRetrofitClient
+    * */
     @Provides
     @Singleton
     @Named("SecureRetrofitClient")
@@ -76,3 +83,4 @@ object SecureModule {
 
 
 }
+

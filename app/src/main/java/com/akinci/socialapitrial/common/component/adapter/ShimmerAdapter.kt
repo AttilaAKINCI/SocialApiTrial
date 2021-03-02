@@ -5,11 +5,11 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.akinci.socialapitrial.databinding.RowShimmerBinding
 
-class ShimmerAdapter() : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+// randomItem count constructordan gelebilir
+// ViewHolder -> ShimmerViewHolder olabilir
+class ShimmerAdapter(private val randomItemCount: Int = (2..4).random()) : RecyclerView.Adapter<ShimmerAdapter.ShimmerViewHolder>() {
 
-    private val randomItemCount = (2..4).random() // 2,3 or 4 instance
-
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ShimmerViewHolder {
         val inflater = LayoutInflater.from(parent.context)
         return ShimmerViewHolder(RowShimmerBinding.inflate(inflater, parent, false))
     }
@@ -18,12 +18,15 @@ class ShimmerAdapter() : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
         return randomItemCount
     }
 
-    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-        if(holder is ShimmerViewHolder) { holder.bind() }
+    override fun onBindViewHolder(holder: ShimmerViewHolder, position: Int) {
+        if (holder is ShimmerViewHolder) {
+            holder.bind()
+        }
     }
 
     class ShimmerViewHolder(val binding: RowShimmerBinding) : RecyclerView.ViewHolder(binding.root) {
-        fun bind() { binding.shimmerViewContainer.startShimmer() }
+        fun bind() {
+            binding.shimmerViewContainer.startShimmer()
+        }
     }
-
 }

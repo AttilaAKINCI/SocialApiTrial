@@ -5,7 +5,7 @@
     <RelativeLayout
         android:id="@+id/container"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" >
+        android:layout_height="match_parent">
 
         <com.google.android.material.appbar.AppBarLayout
             android:id="@+id/appBarLayout"
@@ -17,19 +17,21 @@
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
                 android:background="?attr/colorPrimary"
-                android:theme="@style/ToolbarTheme"
-                android:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
+                android:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+                android:theme="@style/ToolbarTheme" />
 
         </com.google.android.material.appbar.AppBarLayout>
 
         <fragment
             android:id="@+id/navHostFragment"
-            android:tag="navHostFragment"
             android:name="androidx.navigation.fragment.NavHostFragment"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_below="@+id/appBarLayout"
-            app:defaultNavHost="true"/>
+            android:tag="navHostFragment"
+            app:defaultNavHost="true" />
 
     </RelativeLayout>
 </layout>
+
+    <!-- Relative Layout performanssiz digerlerine gore, Linear veya constraint olabilir sanki -->
