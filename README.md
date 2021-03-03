@@ -1,3 +1,6 @@
+# SPECIAL NOTE !!
+# 210225_source branch is closed to modification. Only purpose is protect code review results for opened PR which is provided by reviewers
+
 # SocialApiTrial
 SocialApiTrial is a proof of concept application of Twitter API services without using any 3rd party twitter library. 
 Contains pure Twitter API refenrence integrations
