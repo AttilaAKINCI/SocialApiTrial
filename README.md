@@ -1,3 +1,7 @@
+# SPECIAL NOTE !!
+# 210225_review_by_Gozde027 Branch is closed to modification. Only purpose is protect code review results and coding advices which is provided by Gozde027
+
+
 # SocialApiTrial
 SocialApiTrial is a proof of concept application of Twitter API services without using any 3rd party twitter library. 
 Contains pure Twitter API refenrence integrations
