@@ -10,16 +10,25 @@ import androidx.navigation.ui.setupWithNavController
 import com.akinci.socialapitrial.R
 import com.akinci.socialapitrial.databinding.ActivityRootBinding
 
-open class RootActivity : AppCompatActivity()  {
+//TODO Direk kullanimi olmadigi icin abstract olabilir, open methodlariyla beraber
+abstract class RootActivity : AppCompatActivity() {
 
     private lateinit var navigationController: NavController
-    lateinit var binding : ActivityRootBinding
+
+    //TODO dataBinding yerine ViewBinding olabilir cunku view model set etmiyorsun
+    lateinit var binding: ActivityRootBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_root)
 
         // setup navigation
+        //TODO
+        /*
+        * supportFragmentManager.findFragmentByTag("navHostFragment") su ifade nullable, eger tagin ismi degistirilirse "android:tag="navHostFragment"
+        * as ile direk cast edersen crash edebilir -> as NavHostFragment? yapabilirsin
+        * findFragmentById daha mantikli olabilir, en azindan isim degisirse compile error verir
+        * */
         val navHostFragment = supportFragmentManager.findFragmentByTag("navHostFragment") as NavHostFragment
         val graphInflater = navHostFragment.navController.navInflater
         val navGraph = graphInflater.inflate(getNavigationGraph()) // gets navigation graph from each root activity
@@ -38,6 +47,7 @@ open class RootActivity : AppCompatActivity()  {
         binding.toolbar.setNavigationOnClickListener { onBackPressed() }
     }
 
-    open fun getNavigationGraph() : Int { return -1 }
-    open fun getFragmentsThatHidesBackButton() : Set<Int> { return setOf() }
+    abstract fun getNavigationGraph(): Int
+
+    abstract fun getFragmentsThatHidesBackButton(): Set<Int>
 }

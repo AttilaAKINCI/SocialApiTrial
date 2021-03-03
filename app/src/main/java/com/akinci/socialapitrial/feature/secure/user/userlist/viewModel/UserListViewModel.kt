@@ -18,36 +18,38 @@ import javax.inject.Inject
 
 @HiltViewModel
 class UserListViewModel @Inject constructor(
-        private val userRepository: UserRepository,
-        private val loginRepository: LoginRepository,
-        private val sharedPreferences: Preferences
+    private val userRepository: UserRepository,
+    private val loginRepository: LoginRepository,
+    private val sharedPreferences: Preferences
 ) : ViewModel() {
 
     // eventHandler sends event feedback to UI layer(Fragment)
     private val _eventHandler = MutableLiveData<Event<Resource<String>>>()
-    val eventHandler : LiveData<Event<Resource<String>>> = _eventHandler
+    val eventHandler: LiveData<Event<Resource<String>>> = _eventHandler
 
     // user info
     private val _userInfo = MutableLiveData<UserResponse>()
-    val userInfo : LiveData<UserResponse> = _userInfo
+    val userInfo: LiveData<UserResponse> = _userInfo
 
     init {
         Timber.d("UserListViewModel created..")
     }
 
     /** Called when UserListFragment created. **/
-    fun fetchUserInfo(){
+    fun fetchUserInfo() {
         // fetch each data if it's not fetched before
-        if(userInfo.value == null){ getUserInfo() }
+        if (userInfo.value == null) {
+            getUserInfo()
+        }
     }
 
-    private fun getUserInfo(){
+    private fun getUserInfo() {
         viewModelScope.launch {
             val userId = sharedPreferences.getStoredTag(LocalPreferenceConfig.USER_ID) ?: ""
             val userName = sharedPreferences.getStoredTag(LocalPreferenceConfig.USER_NAME) ?: ""
 
-            if(userId.isNotEmpty() && userName.isNotEmpty()){
-                when(val userResponse = userRepository.getUserInfo(userId.toLong(), userName)) {
+            if (userId.isNotEmpty() && userName.isNotEmpty()) {
+                when (val userResponse = userRepository.getUserInfo(userId.toLong(), userName)) {
                     is Resource.Success -> {
                         // user info is fetched
                         Timber.d("User info is fetched...")
@@ -63,14 +65,20 @@ class UserListViewModel @Inject constructor(
     }
 
     /** bind to sign out button. **/
-    fun signOut(){
+    fun signOut() {
         viewModelScope.launch {
-            when(val signOutResponse = loginRepository.signOut()) {
+            when (val signOutResponse = loginRepository.signOut()) {
                 is Resource.Success -> {
                     // signOut request is completed..
-                    signOutResponse.data?.let{
+                    signOutResponse.data?.let {
                         Timber.d("Signing out...")
                         /** delete all session related keys **/
+                        // TODO sharedpreference i kullanan baska bir class eklenebilir bence su logicleri tutan
+                        // Class TokenHelper(sharedpreference : SharedPref){
+                        //    fun clearTokens(){
+                        //        Tum tokenlar burada silinebilir
+                        //    }
+                        // }
                         sharedPreferences.setStoredTag(LocalPreferenceConfig.OAUTH_TOKEN, "")
                         sharedPreferences.setStoredTag(LocalPreferenceConfig.OAUTH_TOKEN_SECRET, "")
                         sharedPreferences.setStoredTag(LocalPreferenceConfig.OAUTH_TOKEN_VERIFIER, "")

@@ -1,5 +1,6 @@
 package com.akinci.socialapitrial.common.storage
 
+//TODO asil implementation degisirse, bu test anlamsiz kalabilir
 class FakeLocalPreferences : Preferences {
     private val storage : HashMap<String, String?> = hashMapOf()
 

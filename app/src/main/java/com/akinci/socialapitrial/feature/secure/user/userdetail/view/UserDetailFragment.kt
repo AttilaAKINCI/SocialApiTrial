@@ -8,17 +8,13 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.navigation.fragment.NavHostFragment
 import com.akinci.socialapitrial.R
 import com.akinci.socialapitrial.common.component.GlideApp
 import com.akinci.socialapitrial.common.component.SnackBar
-import com.akinci.socialapitrial.common.component.adapter.ShimmerAdapter
 import com.akinci.socialapitrial.common.helper.Resource
 import com.akinci.socialapitrial.databinding.FragmentDetailBinding
 import com.akinci.socialapitrial.feature.secure.user.userdetail.adapter.TimeLineListAdapter
 import com.akinci.socialapitrial.feature.secure.user.userdetail.viewmodel.UserDetailViewModel
-import com.akinci.socialapitrial.feature.secure.user.userlist.adapter.recycler.CommunityListAdapter
-import com.akinci.socialapitrial.feature.secure.user.userlist.view.UserListFragmentDirections
 import dagger.hilt.android.AndroidEntryPoint
 import timber.log.Timber
 
@@ -26,11 +22,12 @@ import timber.log.Timber
 class UserDetailFragment : Fragment() {
 
     lateinit var binding: FragmentDetailBinding
-    private val userDetailViewModel : UserDetailViewModel by viewModels()
+    private val userDetailViewModel: UserDetailViewModel by viewModels()
 
-    /** fragment args. **/
-    var userId = 0L
-    var screenName = ""
+    // TODO argumanlari lazy alabilirsin, userId ve screenName de val olur var yerine
+    private val userDetailFragmentArgs by lazy {
+        UserDetailFragmentArgs.fromBundle(requireArguments())
+    }
 
     private var timeLineListAdapter = TimeLineListAdapter()
 
@@ -44,13 +41,10 @@ class UserDetailFragment : Fragment() {
         binding.vm = userDetailViewModel
 
         // fetch selected product id
-        val userDetailFragmentArgs = UserDetailFragmentArgs.fromBundle(requireArguments())
-        userId = userDetailFragmentArgs.userId
-        screenName = userDetailFragmentArgs.screenName
+
         val name = userDetailFragmentArgs.name
 
         (activity as AppCompatActivity).supportActionBar?.title = resources.getString(R.string.title_user_detail_param, name)
-
 
         Timber.d("UserDetailFragment created..")
         return binding.root
@@ -59,7 +53,7 @@ class UserDetailFragment : Fragment() {
     override fun onStart() {
         super.onStart()
         // fetch user time line
-        userDetailViewModel.fetchTimeLineData(userId, screenName)
+        userDetailViewModel.fetchTimeLineData(userDetailFragmentArgs.userId, userDetailFragmentArgs.screenName)
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
@@ -67,23 +61,25 @@ class UserDetailFragment : Fragment() {
 
         userDetailViewModel.userInfo.observe(viewLifecycleOwner, {
             GlideApp.with(binding.userImage.context)
-                    .load(it.profile_image_url_https)
-                    .centerCrop()
-                    .placeholder(R.drawable.ic_person)
-                    .into(binding.userImage)
+                .load(it.profile_image_url_https)
+                .centerCrop()
+                .placeholder(R.drawable.ic_person)
+                .into(binding.userImage)
 
             val backgroundImageUrl = it.profile_banner_url
-            if(!backgroundImageUrl.isNullOrEmpty()){
+            if (!backgroundImageUrl.isNullOrEmpty()) {
                 binding.profileBackgroundImage.visibility = View.VISIBLE
                 GlideApp.with(binding.profileBackgroundImage.context)
-                        .load(it.profile_banner_url)
-                        .centerCrop()
-                        .into(binding.profileBackgroundImage)
-            }else{
+                    .load(it.profile_banner_url)
+                    .centerCrop()
+                    .into(binding.profileBackgroundImage)
+            } else {
                 binding.profileBackgroundImage.visibility = View.GONE
             }
         })
 
+        // TODO when logici view modelde olsa daha iyi olur
+        //  tum caseleri ayri live data ile observe edebilirsin
         userDetailViewModel.eventHandler.observe(viewLifecycleOwner, { event ->
             // only one time consume this event
             val content = event.getContentIfNotHandled()
@@ -99,7 +95,7 @@ class UserDetailFragment : Fragment() {
                         Timber.d("timeline tweets is displayed")
 
                         it.data?.let { data ->
-                                if(data.isNotEmpty()){
+                            if (data.isNotEmpty()) {
                                 binding.recyclerListTweets.visibility = View.VISIBLE
                                 binding.progressBar.visibility = View.GONE
 
@@ -116,5 +112,4 @@ class UserDetailFragment : Fragment() {
             }
         })
     }
-
 }

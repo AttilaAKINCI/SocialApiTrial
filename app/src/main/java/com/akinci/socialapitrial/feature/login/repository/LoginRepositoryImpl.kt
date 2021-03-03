@@ -40,6 +40,8 @@ class LoginRepositoryImpl @Inject constructor(
         return callService(
                 retrofitServiceAction = { loginService.getAccessToken(oauthToken, oauthTokenSecret) },
                 customResponseMappingAction = {
+
+                    //TODO Su logic baska yere tasinabilir
                     val responseUrlParameters = if(it.contains("?")) { it } else { "?$it" }
                     val uri = Uri.parse(responseUrlParameters)
                     val accessToken = uri.getQueryParameter("oauth_token") ?: ""

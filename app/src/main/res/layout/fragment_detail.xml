@@ -65,3 +65,6 @@
 
     </RelativeLayout>
 </layout>
+
+<!-- mumkun oldugunca relativedan kacinmak lazim, embeddedlerden ozellikle -->
+<!-- view modeli i set etmisiz ama kullanmamisiz burada -->

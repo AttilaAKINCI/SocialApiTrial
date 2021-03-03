@@ -10,41 +10,47 @@ import com.akinci.socialapitrial.feature.secure.user.data.output.userdetail.User
 import com.akinci.socialapitrial.feature.secure.user.data.output.userlist.UserResponse
 import com.akinci.socialapitrial.feature.secure.user.repository.UserRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import timber.log.Timber
 import javax.inject.Inject
 
 @HiltViewModel
 class UserDetailViewModel @Inject constructor(
-        private val userRepository: UserRepository
+    private val userRepository: UserRepository
 ) : ViewModel() {
 
     // eventHandler sends event feedback to UI layer(Fragment)
+    // TODO event e neden gerek duydun burada?
     private val _eventHandler = MutableLiveData<Event<Resource<List<UserTimeLineResponse>>>>()
-    val eventHandler : LiveData<Event<Resource<List<UserTimeLineResponse>>>> = _eventHandler
+    val eventHandler: LiveData<Event<Resource<List<UserTimeLineResponse>>>> = _eventHandler
 
     private val tweetFetchCount = 20
     private var userTimeLine = listOf<UserTimeLineResponse>()
 
     // user info
     private val _userInfo = MutableLiveData<UserResponse>()
-    val userInfo : LiveData<UserResponse> = _userInfo
+    val userInfo: LiveData<UserResponse> = _userInfo
 
     init {
         Timber.d("UserDetailViewModel created..")
     }
 
-    fun fetchTimeLineData(userId: Long, screenName: String){
-        if(userInfo.value == null){ getUserInfo(userId, screenName) }
-        if(userTimeLine.isEmpty()){
+    fun fetchTimeLineData(userId: Long, screenName: String) {
+        //TODOn surayi cok anlamadim, user info null check neden gerekli?
+        if (userInfo.value == null) {
+            getUserInfo(userId, screenName)
+        }
+        if (userTimeLine.isEmpty()) {
             _eventHandler.postValue(Event(Resource.Loading()))
             getUserTimeLine(userId)
         }
     }
 
-    private fun getUserInfo(userId: Long, userName: String){
+    private fun getUserInfo(userId: Long, userName: String) {
         viewModelScope.launch {
-            when(val userResponse = userRepository.getUserInfo(userId, userName)) {
+            when (val userResponse = userRepository.getUserInfo(userId, userName)) {
                 is Resource.Success -> {
                     // user info is fetched
                     Timber.d("User info is fetched...")
@@ -58,12 +64,15 @@ class UserDetailViewModel @Inject constructor(
         }
     }
 
-    private fun getUserTimeLine(userId : Long){
-        viewModelScope.launch {
-            when(val userTimeLineResponse = userRepository.getUserTimeLine(userId, tweetFetchCount)) {
+    private fun getUserTimeLine(userId: Long) {
+        //TODO main threadte call yapiyor, IO thread e alabilirsin
+        viewModelScope.launch(Dispatchers.IO) {
+            Timber.tag("xxx").d("Top-level: current thread is ${Thread.currentThread().name}")
+            when (val userTimeLineResponse = userRepository.getUserTimeLine(userId, tweetFetchCount)) {
                 is Resource.Success -> {
                     // user time line response fetched
                     Timber.d("User TimeLine is fetched...")
+                    // TODO !! su castingten kacinmak daha iyi, null gelirse crash ettirir direk
                     userTimeLine = userTimeLineResponse.data!!
                     _eventHandler.postValue(Event(Resource.Success(userTimeLineResponse.data)))
                 }
@@ -74,5 +83,4 @@ class UserDetailViewModel @Inject constructor(
             }
         }
     }
-
 }

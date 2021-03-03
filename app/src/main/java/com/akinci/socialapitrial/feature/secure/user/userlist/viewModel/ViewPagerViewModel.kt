@@ -21,35 +21,35 @@ class ViewPagerViewModel @Inject constructor(
 
     // followers event handler
     private val _followersEventHandler = MutableLiveData<Event<Resource<List<UserResponse>>>>()
-    val followersEventHandler : LiveData<Event<Resource<List<UserResponse>>>> = _followersEventHandler
+    val followersEventHandler: LiveData<Event<Resource<List<UserResponse>>>> = _followersEventHandler
 
     // friends event handler
     private val _friendsEventHandler = MutableLiveData<Event<Resource<List<UserResponse>>>>()
-    val friendsEventHandler : LiveData<Event<Resource<List<UserResponse>>>> = _friendsEventHandler
+    val friendsEventHandler: LiveData<Event<Resource<List<UserResponse>>>> = _friendsEventHandler
 
     // follower list
-    private var followersCursor = -1L
+    private var followersCursor = -1L //TODO anlayamadim bunu
     private var followers = listOf<UserResponse>()
 
     // friend list
-    private var followingsCursor = -1L
+    private var followingsCursor = -1L //TODO anlayamadim neden
     private var friends = listOf<UserResponse>()
 
     init {
         Timber.d("ViewPagerViewModel created..")
     }
 
-    fun fetchInitialData(mode: ViewPagerMode){
+    fun fetchInitialData(mode: ViewPagerMode) {
         //send Loading state for shimmer loading
-        when(mode){
+        when (mode) {
             ViewPagerMode.FOLLOWERS -> {
-                if(followers.isEmpty()){
+                if (followers.isEmpty()) { //TODO bu check gerekli mi? Zaten bir kere cagriliyor
                     _followersEventHandler.postValue(Event(Resource.Loading()))
                     getFollowers()
                 }
             }
             ViewPagerMode.FRIENDS -> {
-                if(friends.isEmpty()){
+                if (friends.isEmpty()) {
                     _friendsEventHandler.postValue(Event(Resource.Loading()))
                     getFollowings()
                 }
@@ -57,9 +57,9 @@ class ViewPagerViewModel @Inject constructor(
         }
     }
 
-    private fun getFollowers(){
+    private fun getFollowers() {
         viewModelScope.launch {
-            when(val followersResponse = userRepository.fetchFollowers(followersCursor)) {
+            when (val followersResponse = userRepository.fetchFollowers(followersCursor)) {
                 is Resource.Success -> {
                     // followers response fetched
                     Timber.d("Followers list is fetched...")
@@ -79,15 +79,15 @@ class ViewPagerViewModel @Inject constructor(
         }
     }
 
-    private fun getFollowings(){
+    private fun getFollowings() {
         viewModelScope.launch {
-            val cursor = -1
-            when(val followingsResponse = userRepository.fetchFollowings(followingsCursor)) {
+            val cursor = -1 //TODO remove
+            when (val followingsResponse = userRepository.fetchFollowings(followingsCursor)) {
                 is Resource.Success -> {
                     // following response fetched
                     Timber.d("Followings list is fetched...")
                     followingsResponse.data?.let {
-                        followingsCursor =it.next_cursor
+                        followingsCursor = it.next_cursor
                         it.users?.let { data ->
                             friends = data
                             _friendsEventHandler.postValue(Event(Resource.Success(data)))
@@ -101,5 +101,4 @@ class ViewPagerViewModel @Inject constructor(
             }
         }
     }
-
 }

@@ -22,6 +22,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import timber.log.Timber
 
 @AndroidEntryPoint
+//TODO view pager demek yerine, feature a gore isim vermek daha mantikli
 class ViewPagerContentFragment (
     private val mode : ViewPagerMode
 ) : Fragment() {
