@@ -10,20 +10,29 @@ import com.akinci.socialapitrial.feature.secure.user.data.output.userlist.UserRe
 import com.akinci.socialapitrial.feature.secure.user.repository.UserRepository
 import com.akinci.socialapitrial.feature.secure.user.userlist.adapter.viewpager.ViewPagerMode
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import timber.log.Timber
 import javax.inject.Inject
 
 @HiltViewModel
-class ViewPagerViewModel @Inject constructor(
+class UserListContentViewModel @Inject constructor(
     private val userRepository: UserRepository
 ) : ViewModel() {
 
     // followers event handler
+    /** followersEventHandler is attached an observer in fragment. On layout change or onConfiguration change
+     * fragment automatically observes again and again. I need to process event data once in order
+     * to achieve that I used Event.kt helper
+     **/
     private val _followersEventHandler = MutableLiveData<Event<Resource<List<UserResponse>>>>()
     val followersEventHandler : LiveData<Event<Resource<List<UserResponse>>>> = _followersEventHandler
 
     // friends event handler
+    /** friendsEventHandler is attached an observer in fragment. On layout change or onConfiguration change
+     * fragment automatically observes again and again. I need to process event data once in order
+     * to achieve that I used Event.kt helper
+     **/
     private val _friendsEventHandler = MutableLiveData<Event<Resource<List<UserResponse>>>>()
     val friendsEventHandler : LiveData<Event<Resource<List<UserResponse>>>> = _friendsEventHandler
 
@@ -41,6 +50,9 @@ class ViewPagerViewModel @Inject constructor(
 
     fun fetchInitialData(mode: ViewPagerMode){
         //send Loading state for shimmer loading
+        /** fetchInitialData is triggered in UserListContentFragment OnStart method.
+         * Fragment can call OnStart method multiple times. So if I achieved data before
+         * I don't need to fetch it again and again **/
         when(mode){
             ViewPagerMode.FOLLOWERS -> {
                 if(followers.isEmpty()){
@@ -58,7 +70,8 @@ class ViewPagerViewModel @Inject constructor(
     }
 
     private fun getFollowers(){
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
+            Timber.tag("getFollowers-VMScope").d("Top-level: current thread is ${Thread.currentThread().name}")
             when(val followersResponse = userRepository.fetchFollowers(followersCursor)) {
                 is Resource.Success -> {
                     // followers response fetched
@@ -80,8 +93,8 @@ class ViewPagerViewModel @Inject constructor(
     }
 
     private fun getFollowings(){
-        viewModelScope.launch {
-            val cursor = -1
+        viewModelScope.launch(Dispatchers.IO) {
+            Timber.tag("getFollowings-VMScope").d("Top-level: current thread is ${Thread.currentThread().name}")
             when(val followingsResponse = userRepository.fetchFollowings(followingsCursor)) {
                 is Resource.Success -> {
                     // following response fetched

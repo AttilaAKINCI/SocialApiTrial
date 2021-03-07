@@ -12,6 +12,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.navigation.fragment.NavHostFragment
 import com.akinci.socialapitrial.R
+import com.akinci.socialapitrial.databinding.ActivityRootBinding
 import com.akinci.socialapitrial.databinding.FragmentSplashBinding
 import timber.log.Timber
 
@@ -23,7 +24,8 @@ class SplashFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_splash, container, false)
+        /** Initialization of ViewBinding not need for DataBinding here **/
+        binding = FragmentSplashBinding.inflate(layoutInflater)
         binding.lifecycleOwner = viewLifecycleOwner
 
         binding.animation.addAnimatorListener(object : Animator.AnimatorListener {

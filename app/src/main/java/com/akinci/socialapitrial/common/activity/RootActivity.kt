@@ -10,15 +10,21 @@ import androidx.navigation.ui.setupWithNavController
 import com.akinci.socialapitrial.R
 import com.akinci.socialapitrial.databinding.ActivityRootBinding
 
-open class RootActivity : AppCompatActivity()  {
+abstract class RootActivity : AppCompatActivity()  {
 
     private lateinit var navigationController: NavController
     lateinit var binding : ActivityRootBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = DataBindingUtil.setContentView(this, R.layout.activity_root)
+        /** Initialization of ViewBinding not need for DataBinding here **/
+        binding = ActivityRootBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
+        /** navHostFragment is placed in <fragment></fragment> tags and
+         * findViewById not works with this tags so findViewByTag is used in order to acquire
+         * navHostFragment
+        **/
         // setup navigation
         val navHostFragment = supportFragmentManager.findFragmentByTag("navHostFragment") as NavHostFragment
         val graphInflater = navHostFragment.navController.navInflater
@@ -38,6 +44,6 @@ open class RootActivity : AppCompatActivity()  {
         binding.toolbar.setNavigationOnClickListener { onBackPressed() }
     }
 
-    open fun getNavigationGraph() : Int { return -1 }
-    open fun getFragmentsThatHidesBackButton() : Set<Int> { return setOf() }
+    abstract fun getNavigationGraph() : Int
+    abstract fun getFragmentsThatHidesBackButton() : Set<Int>
 }

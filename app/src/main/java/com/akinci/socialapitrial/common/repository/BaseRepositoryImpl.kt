@@ -28,7 +28,7 @@ open class BaseRepositoryImpl constructor(
                     } ?: Resource.Error("Service response body is null")
                 }else {
                     /** 400 -> 599 Error status range **/
-                    Timber.d("Service response failed: %s", response.body().toString())
+                    Timber.d("Service response failed: %s", response.errorBody().toString())
                     Resource.Error("Service response failed with code: " + response.code())
                 }
             }else{
@@ -60,7 +60,7 @@ open class BaseRepositoryImpl constructor(
                     } ?: Resource.Error("Service response body is null")
                 }else {
                     /** 400 -> 599 Error status range **/
-                    Timber.d("Service response failed: %s", response.body().toString())
+                    Timber.d("Service response failed: %s", response.errorBody().toString())
                     Resource.Error("Service response failed with code: " + response.code())
                 }
             }else{

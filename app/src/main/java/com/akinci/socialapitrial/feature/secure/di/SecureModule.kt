@@ -1,14 +1,13 @@
 package com.akinci.socialapitrial.feature.secure.di
 
-import android.content.Context
 import com.akinci.socialapitrial.BuildConfig
+import com.akinci.socialapitrial.common.di.AppModule
 import com.akinci.socialapitrial.common.storage.LocalPreferenceConfig
 import com.akinci.socialapitrial.common.storage.Preferences
 import com.squareup.moshi.Moshi
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
-import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
@@ -17,18 +16,20 @@ import retrofit2.converter.moshi.MoshiConverterFactory
 import se.akerfeldt.okhttp.signpost.OkHttpOAuthConsumer
 import se.akerfeldt.okhttp.signpost.SigningInterceptor
 import java.util.concurrent.TimeUnit
-import javax.inject.Named
+import javax.inject.Qualifier
 import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
 object SecureModule {
 
+    @Qualifier
+    @Retention(AnnotationRetention.BINARY)
+    annotation class SecureOkHttpClient
+
     @Provides
-    @Singleton
-    @Named("SecureOkHttpClient")
+    @SecureOkHttpClient
     fun provideRestOkHttpClient(
-            @ApplicationContext context: Context,
             sharedPreferences: Preferences
     ) : OkHttpClient {
         val builder = OkHttpClient.Builder()
@@ -61,12 +62,15 @@ object SecureModule {
     @Provides
     fun providesMoshi(): Moshi = Moshi.Builder().build()
 
+    @Qualifier
+    @Retention(AnnotationRetention.BINARY)
+    annotation class SecureRetrofitClient
+
     @Provides
-    @Singleton
-    @Named("SecureRetrofitClient")
+    @SecureRetrofitClient
     fun provideRetrofit(
-            @Named("SecureOkHttpClient") okHttpClient: OkHttpClient,
-            @Named("BaseURL") baseURL: String,
+            @SecureOkHttpClient okHttpClient: OkHttpClient,
+            @AppModule.BaseURL baseURL: String,
             converter: MoshiConverterFactory
     ) : Retrofit = Retrofit.Builder()
             .baseUrl(baseURL)

@@ -1,6 +1,7 @@
 package com.akinci.socialapitrial.common.storage
 
 import androidx.test.filters.SmallTest
+import com.akinci.socialapitrial.di.TestAppModule
 import com.google.common.truth.Truth.assertThat
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
@@ -9,7 +10,6 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import javax.inject.Inject
-import javax.inject.Named
 
 @SmallTest
 @HiltAndroidTest
@@ -25,7 +25,7 @@ class LocalPreferencesAndroidTest {
     }
 
     @Inject
-    @Named("test-localPreference")
+    @TestAppModule.TestLocalPreference
     lateinit var sharedPreferences : Preferences
 
     @Test

@@ -4,30 +4,28 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.NavHostFragment
-import com.akinci.socialapitrial.R
 import com.akinci.socialapitrial.common.component.SnackBar
 import com.akinci.socialapitrial.common.component.adapter.ShimmerAdapter
 import com.akinci.socialapitrial.common.helper.Event
 import com.akinci.socialapitrial.common.helper.Resource
-import com.akinci.socialapitrial.databinding.FragmentViewPagerContentBinding
+import com.akinci.socialapitrial.databinding.FragmentUserListContentBinding
+import com.akinci.socialapitrial.feature.secure.user.data.output.userlist.UserResponse
 import com.akinci.socialapitrial.feature.secure.user.userlist.adapter.recycler.CommunityListAdapter
 import com.akinci.socialapitrial.feature.secure.user.userlist.adapter.viewpager.ViewPagerMode
-import com.akinci.socialapitrial.feature.secure.user.data.output.userlist.UserResponse
-import com.akinci.socialapitrial.feature.secure.user.userlist.viewModel.ViewPagerViewModel
+import com.akinci.socialapitrial.feature.secure.user.userlist.viewModel.UserListContentViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import timber.log.Timber
 
 @AndroidEntryPoint
-class ViewPagerContentFragment (
+class UserListContentFragment (
     private val mode : ViewPagerMode
 ) : Fragment() {
 
-    lateinit var binding: FragmentViewPagerContentBinding
-    private val viewPagerViewModel : ViewPagerViewModel by activityViewModels()
+    lateinit var binding: FragmentUserListContentBinding
+    private val userListContentViewModel : UserListContentViewModel by activityViewModels()
 
     private val shimmerAdapter = ShimmerAdapter()
     private lateinit var userListAdapter : CommunityListAdapter
@@ -35,9 +33,9 @@ class ViewPagerContentFragment (
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         // Inflate the layout for this fragment
-        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_view_pager_content, container, false)
+        /** Initialization of ViewBinding not need for DataBinding here **/
+        binding = FragmentUserListContentBinding.inflate(inflater)
         binding.lifecycleOwner = viewLifecycleOwner
-        binding.vm = viewPagerViewModel
 
         // recycler list adapter
         userListAdapter = CommunityListAdapter(clickListener = { userId, screenName, name ->
@@ -56,20 +54,20 @@ class ViewPagerContentFragment (
     override fun onStart() {
         super.onStart()
         // fetch followers / friends data.
-        viewPagerViewModel.fetchInitialData(mode)
+        userListContentViewModel.fetchInitialData(mode)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         if(mode == ViewPagerMode.FOLLOWERS){
-            viewPagerViewModel.followersEventHandler.observe(viewLifecycleOwner, { event ->
+            userListContentViewModel.followersEventHandler.observe(viewLifecycleOwner, { event ->
                 handleCommunityData(event)
             })
         }
 
         if(mode == ViewPagerMode.FRIENDS) {
-            viewPagerViewModel.friendsEventHandler.observe(viewLifecycleOwner, { event ->
+            userListContentViewModel.friendsEventHandler.observe(viewLifecycleOwner, { event ->
                 handleCommunityData(event)
             })
         }

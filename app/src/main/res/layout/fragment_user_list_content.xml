@@ -3,18 +3,12 @@
     xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <data>
-        <variable
-            name="vm"
-            type="com.akinci.socialapitrial.feature.secure.user.userlist.viewModel.ViewPagerViewModel"/>
-    </data>
-
     <RelativeLayout
         android:id="@+id/list_layout_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/mainBg"
-        tools:context=".feature.secure.user.userlist.view.ViewPagerContentFragment">
+        tools:context=".feature.secure.user.userlist.view.UserListContentFragment">
 
         <!-- List -->
         <androidx.recyclerview.widget.RecyclerView

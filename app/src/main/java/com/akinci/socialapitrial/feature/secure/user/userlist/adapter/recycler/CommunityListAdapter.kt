@@ -9,16 +9,16 @@ import com.akinci.socialapitrial.common.component.GlideApp
 import com.akinci.socialapitrial.databinding.RowUserBinding
 import com.akinci.socialapitrial.feature.secure.user.data.output.userlist.UserResponse
 
-class CommunityListAdapter(private val clickListener: (Long, String, String) -> Unit) : ListAdapter<UserResponse, RecyclerView.ViewHolder>(UserDiffCallback()) {
+class CommunityListAdapter(private val clickListener: (Long, String, String) -> Unit) : ListAdapter<UserResponse, CommunityListAdapter.UserViewHolder>(UserDiffCallback()) {
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): UserViewHolder {
         val layoutInflater = LayoutInflater.from(parent.context)
         return UserViewHolder(RowUserBinding.inflate(layoutInflater, parent, false))
     }
 
-    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: UserViewHolder, position: Int) {
         val item = getItem(position)
-        if(holder is UserViewHolder) { holder.bind(item, clickListener) }
+        holder.bind(item, clickListener)
     }
 
     class UserViewHolder(val binding: RowUserBinding) : RecyclerView.ViewHolder(binding.root) {

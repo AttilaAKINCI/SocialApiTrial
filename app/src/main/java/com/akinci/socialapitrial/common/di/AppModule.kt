@@ -10,7 +10,7 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
-import javax.inject.Named
+import javax.inject.Qualifier
 import javax.inject.Singleton
 
 @Module
@@ -36,8 +36,12 @@ object AppModule {
     /** Retrofit HILT Integrations
      * START
      * **/
+    @Qualifier
+    @Retention(AnnotationRetention.BINARY)
+    annotation class BaseURL
+
     @Provides
-    @Named("BaseURL")
+    @BaseURL
     fun provideBaseUrl() = RestConfig.API_BASE_URL
 
 }

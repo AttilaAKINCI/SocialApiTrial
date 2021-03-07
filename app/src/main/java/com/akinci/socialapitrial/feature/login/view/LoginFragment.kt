@@ -63,15 +63,17 @@ class LoginFragment : Fragment() {
                 when (it) {
                     is Resource.Success -> {
                         // access token is acquired. Proceed to Dashboard.
-                        /** Navigate to DashBoard Page **/
-                        SnackBar.makeLarge(binding.root, it.data.toString(), SnackBar.LENGTH_LONG).show()
-
-                        Handler(Looper.getMainLooper()).postDelayed({
-                            /** remove login flow from back stack and start secure dashboard flow. **/
-                            val intent = Intent(activity, DashboardRootActivity::class.java)
-                            startActivity(intent)
-                            activity?.finish()
-                        }, 1000)
+                        /** Navigate to DashBoard Page
+                         * POST DELAYED ACTION ON VIEW MODEL (1000 ms)
+                         * **/
+                        /** remove login flow from back stack and start secure dashboard flow. **/
+                        val intent = Intent(activity, DashboardRootActivity::class.java)
+                        startActivity(intent)
+                        activity?.finish()
+                    }
+                    is Resource.Info -> {
+                        // show error message on snackBar
+                        SnackBar.makeLarge(binding.root, it.message, SnackBar.LENGTH_LONG).show()
                     }
                     is Resource.Error -> {
                         // show error message on snackBar

@@ -33,6 +33,17 @@ class LocalPreferencesTest {
         assertThat(insertValue).isEqualTo(fetchedValue)
     }
 
+    @Test
+    fun `insert a value and then clear`(){
+        val insertValue = "insertValue"
+        preferences.setStoredTag("insertedKey", insertValue)
+        preferences.clear()
+
+        val fetchedValue = preferences.getStoredTag("insertedKey")
+
+        assertThat(fetchedValue).isNull()
+    }
+
     @After
     fun tearDown(){ /** Not needed **/ }
 }

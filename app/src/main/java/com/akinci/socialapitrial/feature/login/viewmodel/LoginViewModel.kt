@@ -12,6 +12,8 @@ import com.akinci.socialapitrial.common.storage.Preferences
 import com.akinci.socialapitrial.feature.login.repository.LoginRepository
 import com.akinci.socialapitrial.feature.secure.user.data.output.userlist.UserResponse
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import timber.log.Timber
 import javax.inject.Inject
@@ -26,10 +28,18 @@ class LoginViewModel @Inject constructor(
     val isLoggedIn : LiveData<Boolean> = _isLoggedIn
 
     // after access token service, this event is fired in order to proceed dashboard.
+    /** loginEventHandler is attached an observer in fragment. On layout change or onConfiguration change
+     * fragment automatically observes again and again. I need to process event data once in order
+     * to achieve that I used Event.kt helper
+     **/
     private val _loginEventHandler = MutableLiveData<Event<Resource<String>>>()
     val loginEventHandler : LiveData<Event<Resource<String>>> = _loginEventHandler
 
     // authorizeEventHandler sends event feedback to UI layer(Fragment)
+    /** authorizeEventHandler is attached an observer in fragment. On layout change or onConfiguration change
+     * fragment automatically observes again and again. I need to process event data once in order
+     * to achieve that I used Event.kt helper
+     **/
     private val _authorizeEventHandler = MutableLiveData<Event<Resource<String>>>()
     val authorizeEventHandler : LiveData<Event<Resource<String>>> = _authorizeEventHandler
 
@@ -44,10 +54,15 @@ class LoginViewModel @Inject constructor(
     fun actionSignInWithTwitter() {
         if(isLoggedIn.value!!){
             /** Already logged in proceed to dashboard. **/
-            _loginEventHandler.postValue(Event(Resource.Success("User already logged-in")))
+            viewModelScope.launch(Dispatchers.IO) {
+                _loginEventHandler.postValue(Event(Resource.Info("User already logged-in")))
+                delay(1000)
+                _loginEventHandler.postValue(Event(Resource.Success(null)))
+            }
         }else{
             /** 3 Legged login steps... **/
-            viewModelScope.launch {
+            viewModelScope.launch(Dispatchers.IO) {
+                Timber.tag("signIn-VMScope").d("Top-level: current thread is ${Thread.currentThread().name}")
                 // 3 legged authentication started.
                 /** STEP 1. REQUEST TOKEN **/
                 when(val requestTokenResponse = loginRepository.requestToken()) {
@@ -81,7 +96,8 @@ class LoginViewModel @Inject constructor(
         /** STEP 3. GET ACCESS TOKEN **/
         Timber.d("Access Token will be fetched")
 
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
+            Timber.tag("getAccessToken-VMScope").d("Top-level: current thread is ${Thread.currentThread().name}")
             val oAuthToken = sharedPreferences.getStoredTag(LocalPreferenceConfig.OAUTH_TOKEN) ?: ""
             val oAuthTokenVerifier = sharedPreferences.getStoredTag(LocalPreferenceConfig.OAUTH_TOKEN_VERIFIER) ?: ""
 
@@ -97,7 +113,9 @@ class LoginViewModel @Inject constructor(
                         sharedPreferences.setStoredTag(LocalPreferenceConfig.IS_LOGGED_IN, "1")
 
                         Timber.d("Access token service has been completed.")
-                        _loginEventHandler.postValue(Event(Resource.Success("Access token is acquired. Proceed to Dashboard")))
+                        _loginEventHandler.postValue(Event(Resource.Info("Access token is acquired. Proceed to Dashboard")))
+                        delay(1000)
+                        _loginEventHandler.postValue(Event(Resource.Success(null)))
                     } ?: _loginEventHandler.postValue(Event(Resource.Error("Access token response data is null")))
                 }
                 is Resource.Error -> {

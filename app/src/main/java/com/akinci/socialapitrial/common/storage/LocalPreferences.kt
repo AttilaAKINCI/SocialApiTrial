@@ -16,4 +16,7 @@ class LocalPreferences @Inject constructor(
     override fun setStoredTag(key: String, value: String) {
         prefs.edit().putString(key, value).apply()
     }
+    override fun clear() {
+        prefs.edit().clear().apply()
+    }
 }

@@ -1,12 +1,10 @@
 package com.akinci.socialapitrial.feature.secure.user.userlist.view
 
+import android.app.Application
 import android.content.Intent
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
 import android.view.*
 import androidx.appcompat.app.AppCompatActivity
-import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import com.akinci.socialapitrial.R
@@ -21,6 +19,7 @@ import com.google.android.material.tabs.TabLayoutMediator
 import dagger.hilt.android.AndroidEntryPoint
 import timber.log.Timber
 
+
 @AndroidEntryPoint
 class UserListFragment : Fragment() {
 
@@ -28,19 +27,19 @@ class UserListFragment : Fragment() {
     private val userListViewModel : UserListViewModel by activityViewModels()
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
+            inflater: LayoutInflater, container: ViewGroup?,
+            savedInstanceState: Bundle?
     ): View? {
         super.onCreateView(inflater, container, savedInstanceState)
         // Inflate the layout for this fragment
-        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_user_list, container, false)
+        /** Initialization of ViewBinding not need for DataBinding here **/
+        binding = FragmentUserListBinding.inflate(inflater)
         binding.lifecycleOwner = viewLifecycleOwner
-        binding.vm = userListViewModel
 
         //shows appbar on dashboard screen
         (activity as AppCompatActivity).supportActionBar?.show()
         // set title for first fragment. Probably there is a bug during first fragment initiation.
-        (activity as AppCompatActivity).supportActionBar?.title = resources.getString(R.string.title_user_list)
+        (activity as AppCompatActivity).supportActionBar?.title = getString(R.string.title_user_list)
         setHasOptionsMenu(true)
 
         /** Setup View Pager **/
@@ -49,8 +48,12 @@ class UserListFragment : Fragment() {
 
         TabLayoutMediator(binding.tabLayout, binding.tabViewPager) { tab, position ->
             when(position){
-                0 -> { tab.text = context?.resources?.getString(R.string.tab1) }
-                1 -> { tab.text = context?.resources?.getString(R.string.tab2) }
+                0 -> {
+                    tab.text = getString(R.string.tab1)
+                }
+                1 -> {
+                    tab.text = getString(R.string.tab2)
+                }
             }
         }.attach()
 
@@ -76,13 +79,13 @@ class UserListFragment : Fragment() {
                     .into(binding.userImage)
 
             val backgroundImageUrl = it.profile_banner_url
-            if(!backgroundImageUrl.isNullOrEmpty()){
+            if (!backgroundImageUrl.isNullOrEmpty()) {
                 binding.profileBackgroundImage.visibility = View.VISIBLE
                 GlideApp.with(binding.profileBackgroundImage.context)
                         .load(it.profile_banner_url)
                         .centerCrop()
                         .into(binding.profileBackgroundImage)
-            }else{
+            } else {
                 binding.profileBackgroundImage.visibility = View.GONE
             }
         })
@@ -94,14 +97,16 @@ class UserListFragment : Fragment() {
                 when (it) {
                     is Resource.Success -> {
                         /** Sign out action **/
-                        SnackBar.makeLarge(binding.root, "Signing out. Navigating to Login", SnackBar.LENGTH_LONG).show()
-
-                        Handler(Looper.getMainLooper()).postDelayed({
-                            /** remove secure flow from back stack and start login dashboard flow. **/
-                            val intent = Intent(activity, LoginRootActivity::class.java)
-                            startActivity(intent)
-                            activity?.finish()
-                        }, 1000)
+                        /** remove secure flow from back stack and start login dashboard flow.
+                         * POST DELAYED ACTION ON VIEW MODEL (1000 ms)
+                         * **/
+                        val intent = Intent(activity, LoginRootActivity::class.java)
+                        startActivity(intent)
+                        activity?.finish()
+                    }
+                    is Resource.Info -> {
+                        // show info message on snackBar
+                        SnackBar.make(binding.root, it.message, SnackBar.LENGTH_LONG).show()
                     }
                     is Resource.Error -> {
                         // show error message on snackBar
@@ -114,7 +119,7 @@ class UserListFragment : Fragment() {
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         inflater.inflate(R.menu.action_bar_menu, menu)
-        super.onCreateOptionsMenu(menu,inflater)
+        super.onCreateOptionsMenu(menu, inflater)
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {

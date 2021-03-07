@@ -1,11 +1,9 @@
 package com.akinci.socialapitrial.feature.login.di
 
 import android.content.Context
-import android.content.SharedPreferences
 import com.akinci.socialapitrial.BuildConfig
+import com.akinci.socialapitrial.common.di.AppModule
 import com.akinci.socialapitrial.common.network.NetworkChecker
-import com.akinci.socialapitrial.common.network.RestConfig
-import com.akinci.socialapitrial.common.storage.Preferences
 import com.akinci.socialapitrial.feature.login.data.api.LoginServiceDao
 import com.akinci.socialapitrial.feature.login.repository.LoginRepository
 import com.akinci.socialapitrial.feature.login.repository.LoginRepositoryImpl
@@ -21,7 +19,7 @@ import retrofit2.converter.scalars.ScalarsConverterFactory
 import se.akerfeldt.okhttp.signpost.OkHttpOAuthConsumer
 import se.akerfeldt.okhttp.signpost.SigningInterceptor
 import java.util.concurrent.TimeUnit
-import javax.inject.Named
+import javax.inject.Qualifier
 import javax.inject.Singleton
 
 @Module
@@ -31,9 +29,13 @@ object LoginModule {
     /** Retrofit HILT Integrations
      * START
      * **/
+    @Qualifier
+    @Retention(AnnotationRetention.BINARY)
+    annotation class LoginOkHttpClient
+
     @Provides
     @Singleton
-    @Named("LoginOkHttpClient")
+    @LoginOkHttpClient
     fun provideRestOkHttpClient(
         @ApplicationContext context: Context
     ) : OkHttpClient {
@@ -56,23 +58,26 @@ object LoginModule {
             .build()
     }
 
+    @Qualifier
+    @Retention(AnnotationRetention.BINARY)
+    annotation class StringResponseRetrofitClient
+
     @Provides
     @Singleton
-    @Named("StringResponseRetrofitClient")
+    @StringResponseRetrofitClient
     fun provideRetrofit(
-        @Named("LoginOkHttpClient") okHttpClient: OkHttpClient,
-        @Named("BaseURL") baseURL: String
+        @LoginOkHttpClient okHttpClient: OkHttpClient,
+        @AppModule.BaseURL baseURL: String
     ) : Retrofit = Retrofit.Builder()
         .baseUrl(baseURL)
         .client(okHttpClient)
         .addConverterFactory(ScalarsConverterFactory.create())
         .build()
 
-
     @Provides
     @Singleton
     fun provideLoginServiceDao(
-        @Named("StringResponseRetrofitClient") retrofit: Retrofit
+        @StringResponseRetrofitClient retrofit: Retrofit
     ): LoginServiceDao = retrofit.create(LoginServiceDao::class.java)
 
     @Provides

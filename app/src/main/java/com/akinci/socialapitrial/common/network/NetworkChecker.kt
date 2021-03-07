@@ -19,14 +19,15 @@ class NetworkChecker @Inject constructor(
         val networkCapabilities = connectivityManager.activeNetwork ?: return false
         val activeNetwork = connectivityManager.getNetworkCapabilities(networkCapabilities) ?: return false
 
-        return when {
-            activeNetwork.hasTransport(
-                    NetworkCapabilities.TRANSPORT_WIFI) -> true
-            activeNetwork.hasTransport(
-                    NetworkCapabilities.TRANSPORT_CELLULAR) -> true
-            activeNetwork.hasTransport(
-                    NetworkCapabilities.TRANSPORT_ETHERNET) -> true
-            else -> false
+        val validTransportTypes =
+                listOf(
+                        NetworkCapabilities.TRANSPORT_WIFI,
+                        NetworkCapabilities.TRANSPORT_CELLULAR,
+                        NetworkCapabilities.TRANSPORT_ETHERNET
+                )
+
+        return validTransportTypes.any {
+            activeNetwork.hasTransport(it)
         }
     }
 }
