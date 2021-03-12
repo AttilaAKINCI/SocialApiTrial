@@ -2,6 +2,26 @@
 SocialApiTrial is a proof of concept application of Twitter API services without using any 3rd party twitter library. 
 Contains pure Twitter API refenrence integrations
 
+# License
+
+The code is licensed as:
+
+```
+Copyright 2021 Attila Akıncı
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+   http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+```
+
 ## UI
 SocialApiTrial application consist of 5 different fragments and 2 root activity. Each root activity symbolize different flows of features 
 and also hold a container layout in order to manage fragments which will be controlled by navigation component.
