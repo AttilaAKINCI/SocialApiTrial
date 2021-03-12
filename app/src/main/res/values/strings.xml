@@ -1,0 +1,38 @@
+<resources>
+    <string name="app_name">SocialApiTrial</string>
+
+    <!-- Lottie files -->
+    <string name="lottie_twitter">twitter-logo.json</string>
+    <string name="lottie_twitter_2">twitter-logo2.json</string>
+    <string name="lottie_twitter_3">twitter-logo3.json</string>
+
+    <!--  Login Fragment   -->
+    <string name="title_login">Login</string>
+    <string name="desc_login">Welcome to Twitter Profiler App!!\n\nYou can trace your followers and following so much easily using this app.\n\nJust login with your twitter account and start using!! </string>
+    <string name="action_sign_in">Login With Twitter</string>
+    <string name="action_proceed">Proceed to Dashboard</string>
+
+    <!--  User List Fragment   -->
+    <string name="title_user_list">Community</string>
+    <string name="desc_user_list">Community Fragment</string>
+    <string name="action_open_user_detail">Open User Detail</string>
+    <string name="tab1">Followers</string>
+    <string name="tab2">Friends</string>
+    <string name="accessibility_row_image">Community User Info</string>
+
+    <!--  User Detail Fragment   -->
+    <string name="title_user_detail">TimeLine</string>
+    <string name="title_user_detail_param">%1$s\'s TimeLine</string>
+    <string name="desc_user_detail">User Detail Fragment</string>
+
+    <!--  Splash Fragment   -->
+    <string name="title_splash">Splash</string>
+    <string name="desc_splash">Splash Fragment</string>
+
+
+    <string name="title_activity_dashboard_root">DashboardRootActivity</string>
+    <string name="hello_world">Hello Square World!</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+</resources>
