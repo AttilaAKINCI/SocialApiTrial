@@ -61,7 +61,7 @@ class UserDetailViewModelTest {
 
         userDetailViewModel.userInfo.observeForever{
             assertThat(it.name).isEqualTo("TestName")
-            assertThat(it.id).isEqualTo("1L")
+            assertThat(it.id).isEqualTo("1".toLong())
             assertThat(it.screen_name).isEqualTo("ScreenTestName")
         }
 
