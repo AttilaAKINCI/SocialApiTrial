@@ -38,6 +38,7 @@ Fragments :
 * ViewPager 2 and Tablayout
 * Single Activity multiple Fragments approach
 * Unit testing samples & HILT integrations for testing
+* MockK library for unit testing
 
 ## Twitter API Service Integrations
 * POST oauth/request_token		-> request token
