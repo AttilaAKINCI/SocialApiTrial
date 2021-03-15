@@ -39,6 +39,7 @@ class LoginViewModelTest {
     lateinit var loginViewModel: LoginViewModel
 
     @ExperimentalCoroutinesApi
+    // TODO lateinite gerek yok
     private val coroutineContext: TestContextProvider = TestContextProvider()
 
     @ExperimentalCoroutinesApi
