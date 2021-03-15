@@ -1,7 +1,9 @@
 package com.akinci.socialapitrial.feature.login.viewmodel
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
+import androidx.lifecycle.Observer
 import com.akinci.socialapitrial.common.coroutines.TestContextProvider
+import com.akinci.socialapitrial.common.helper.Event
 import com.akinci.socialapitrial.common.helper.Resource
 import com.akinci.socialapitrial.common.storage.Preferences
 import com.akinci.socialapitrial.feature.login.data.output.AccessTokenResponse
@@ -10,6 +12,9 @@ import com.akinci.socialapitrial.feature.login.repository.LoginRepository
 import com.google.common.truth.Truth.assertThat
 import io.mockk.*
 import io.mockk.impl.annotations.MockK
+import junit.framework.Assert.assertEquals
+import junit.framework.Assert.assertNotNull
+import junit.framework.Assert.assertTrue
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.junit.After
 import org.junit.Before
@@ -31,9 +36,10 @@ class LoginViewModelTest {
     @MockK
     lateinit var sharedPreferences: Preferences
 
-    lateinit var loginViewModel : LoginViewModel
+    lateinit var loginViewModel: LoginViewModel
+
     @ExperimentalCoroutinesApi
-    lateinit var coroutineContext : TestContextProvider
+    private val coroutineContext: TestContextProvider = TestContextProvider()
 
     @ExperimentalCoroutinesApi
     @Before
@@ -41,12 +47,13 @@ class LoginViewModelTest {
         MockKAnnotations.init(this, relaxUnitFun = true)
         every { sharedPreferences.getStoredTag(any()) } returns ""
 
-        coroutineContext = TestContextProvider()
         loginViewModel = LoginViewModel(coroutineContext, loginRepository, sharedPreferences)
     }
 
     @After
-    fun tearDown() { unmockkAll() }
+    fun tearDown() {
+        unmockkAll()
+    }
 
     @ExperimentalCoroutinesApi
     @Test
@@ -59,7 +66,8 @@ class LoginViewModelTest {
         loginViewModel.loginEventHandler.observeForever {
             assertThat(it).isNotNull()
 
-            when(val value = it.getContentIfNotHandled()){
+            // TODO iki birden check etmeye gerek yok burada, sadece success ya da infoya giriyor muhtemelen
+            when (val value = it.getContentIfNotHandled()) {
                 is Resource.Info -> {
                     assertThat(value.message).isEqualTo("User already logged-in")
                 }
@@ -80,7 +88,7 @@ class LoginViewModelTest {
 
         loginViewModel.authorizeEventHandler.observeForever {
             assertThat(it).isNotNull()
-            when(val value = it.getContentIfNotHandled()){
+            when (val value = it.getContentIfNotHandled()) {
                 is Resource.Success -> {
                     assertThat(value.data).contains("oauth_token")
                 }
@@ -89,7 +97,7 @@ class LoginViewModelTest {
 
         loginViewModel.actionSignInWithTwitter()
 
-        verify (exactly = 2) { sharedPreferences.setStoredTag(any(), any()) }
+        verify(exactly = 2) { sharedPreferences.setStoredTag(any(), any()) }
     }
 
     @Test
@@ -98,7 +106,7 @@ class LoginViewModelTest {
 
         loginViewModel.authorizeEventHandler.observeForever {
             assertThat(it).isNotNull()
-            when(val value = it.getContentIfNotHandled()){
+            when (val value = it.getContentIfNotHandled()) {
                 is Resource.Error -> {
                     assertThat(value.message).isEqualTo("Request Token Service Encountered an Error")
                 }
@@ -117,25 +125,27 @@ class LoginViewModelTest {
                 "uhdushdushdu",
                 "10",
                 "UnitTest"
-                )
+            )
         )
 
-        loginViewModel.loginEventHandler.observeForever {
-            assertThat(it).isNotNull()
-            when(val value = it.getContentIfNotHandled()){
-                is Resource.Info -> {
-                    assertThat(value.message).isEqualTo("Access token is acquired. Proceed to Dashboard")
-                }
-                is Resource.Success -> {
-                    assertThat(value.data).isNull()
-                }
-            }
-        }
+        // TODO burada observer-slot yapisini da kullanabilirsin
+        //  Ayrica burada sadece Resource.Info olabilir deger,
+        //  Resource.Success de check etmeye gerek, farkli test daha iyi olur.
+        val observer = mockk<Observer<Event<Resource<String>>>>(relaxed = true)
+        val slot = slot<Event<Resource<String>>>()
+
+        loginViewModel.loginEventHandler.observeForever(observer)
 
         loginViewModel.getAccessToken()
 
-        verify (exactly = 3) { sharedPreferences.getStoredTag(any()) }
-        verify (exactly = 5) { sharedPreferences.setStoredTag(any(), any()) }
+        verify { observer.onChanged(capture(slot)) }
+
+        // TODO capture ettigin slotun valuesunu direk alabilirsin
+        val value = slot.captured.getContentIfNotHandled() as Resource.Info
+        assertThat(value.message).isEqualTo("Access token is acquired. Proceed to Dashboard")
+
+        verify(exactly = 3) { sharedPreferences.getStoredTag(any()) }
+        verify(exactly = 5) { sharedPreferences.setStoredTag(any(), any()) }
 
         coroutineContext.testCoroutineDispatcher.advanceUntilIdle()
     }
@@ -145,9 +155,12 @@ class LoginViewModelTest {
         coEvery { loginRepository.getAccessToken(any(), any()) } returns Resource.Error("Get Access Token Service Encountered an Error")
 
         loginViewModel.loginEventHandler.observeForever {
+            // TODO assertNotNull(it) kullanilabilir
             assertThat(it).isNotNull()
-            when(val value = it.getContentIfNotHandled()){
+            when (val value = it.getContentIfNotHandled()) {
                 is Resource.Error -> {
+                    // TODO assertEquals() kullanilabilir
+                    //assertEquals("Get Access Token Service Encountered an Error", value.message)
                     assertThat(value.message).isEqualTo("Get Access Token Service Encountered an Error")
                 }
             }
@@ -155,8 +168,6 @@ class LoginViewModelTest {
 
         loginViewModel.getAccessToken()
 
-        verify (exactly = 3) { sharedPreferences.getStoredTag(any()) }
+        verify(exactly = 3) { sharedPreferences.getStoredTag(any()) }
     }
-
-
 }
