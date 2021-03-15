@@ -58,6 +58,7 @@ class LoginViewModelTest {
     @ExperimentalCoroutinesApi
     @Test
     fun `action sign in with twitter for already logged in user`() {
+        // TODO before a mocklaniyor, buna gerek yok
         every { sharedPreferences.getStoredTag(any()) } returns "Dummy"
         loginViewModel = LoginViewModel(coroutineContext, loginRepository, sharedPreferences)
 
@@ -84,6 +85,8 @@ class LoginViewModelTest {
     @Test
     fun `action sign in with twitter, first login, set tokens to shared preferences, send authorizeEventHandler success for Success Resource`() {
         coEvery { loginRepository.requestToken() } returns Resource.Success(RequestTokenResponse("authToken", "authTokenSecret"))
+
+        // TODO before a mocklaniyor, buna gerek yok
         justRun { sharedPreferences.setStoredTag(any(), any()) }
 
         loginViewModel.authorizeEventHandler.observeForever {
