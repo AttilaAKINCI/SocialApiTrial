@@ -5,8 +5,8 @@ import kotlinx.coroutines.test.TestCoroutineDispatcher
 import kotlin.coroutines.CoroutineContext
 
 @ExperimentalCoroutinesApi
-class TestContextProvider: CoroutineContextProvider() {
-    val testCoroutineDispatcher = TestCoroutineDispatcher()
+//TODO boyle de calisir muhtemelen, daha temiz olur
+class TestContextProvider(val testCoroutineDispatcher: TestCoroutineDispatcher = TestCoroutineDispatcher()) : CoroutineContextProvider() {
     override val Main: CoroutineContext = testCoroutineDispatcher
     override val IO: CoroutineContext = testCoroutineDispatcher
 }
