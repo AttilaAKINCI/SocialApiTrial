@@ -4,20 +4,21 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.akinci.socialapitrial.common.coroutine.CoroutineContextProvider
 import com.akinci.socialapitrial.common.helper.Event
 import com.akinci.socialapitrial.common.helper.Resource
 import com.akinci.socialapitrial.feature.secure.user.data.output.userdetail.UserTimeLineResponse
 import com.akinci.socialapitrial.feature.secure.user.data.output.userlist.UserResponse
 import com.akinci.socialapitrial.feature.secure.user.repository.UserRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import timber.log.Timber
 import javax.inject.Inject
 
 @HiltViewModel
 class UserDetailViewModel @Inject constructor(
-        private val userRepository: UserRepository
+    private val coroutineContext: CoroutineContextProvider,
+    private val userRepository: UserRepository
 ) : ViewModel() {
 
     // eventHandler sends event feedback to UI layer(Fragment)
@@ -50,8 +51,8 @@ class UserDetailViewModel @Inject constructor(
         }
     }
 
-    private fun getUserInfo(userId: Long, userName: String){
-        viewModelScope.launch(Dispatchers.IO) {
+    fun getUserInfo(userId: Long, userName: String){
+        viewModelScope.launch(coroutineContext.IO) {
             Timber.tag("getUserInfo-VMScope").d("Top-level: current thread is ${Thread.currentThread().name}")
             when(val userResponse = userRepository.getUserInfo(userId, userName)) {
                 is Resource.Success -> {
@@ -69,8 +70,8 @@ class UserDetailViewModel @Inject constructor(
         }
     }
 
-    private fun getUserTimeLine(userId : Long){
-        viewModelScope.launch(Dispatchers.IO){
+    fun getUserTimeLine(userId : Long){
+        viewModelScope.launch(coroutineContext.IO){
             Timber.tag("getUserTimeLine-VMScope").d("Top-level: current thread is ${Thread.currentThread().name}")
             when(val userTimeLineResponse = userRepository.getUserTimeLine(userId, tweetFetchCount)) {
                 is Resource.Success -> {

@@ -38,7 +38,7 @@ open class BaseRepositoryImpl constructor(
             }
         }catch (ex: Exception){
             Timber.d(ex)
-            Resource.Error("Service connection error.")
+            Resource.Error("UnExpected Service Exception.")
         }
     }
 
@@ -70,7 +70,7 @@ open class BaseRepositoryImpl constructor(
             }
         }catch (ex: Exception){
             Timber.d(ex)
-            Resource.Error("Service connection error.")
+            Resource.Error("UnExpected Service Exception.")
         }
     }
 

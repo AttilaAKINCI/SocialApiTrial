@@ -4,7 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.akinci.socialapitrial.common.component.SnackBar
+import com.akinci.socialapitrial.common.coroutine.CoroutineContextProvider
 import com.akinci.socialapitrial.common.helper.Event
 import com.akinci.socialapitrial.common.helper.Resource
 import com.akinci.socialapitrial.common.storage.LocalPreferenceConfig
@@ -13,7 +13,6 @@ import com.akinci.socialapitrial.feature.secure.user.data.output.userlist.UserRe
 import com.akinci.socialapitrial.feature.secure.login.repository.LoginRepository
 import com.akinci.socialapitrial.feature.secure.user.repository.UserRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import timber.log.Timber
@@ -21,9 +20,10 @@ import javax.inject.Inject
 
 @HiltViewModel
 class UserListViewModel @Inject constructor(
-        private val userRepository: UserRepository,
-        private val loginRepository: LoginRepository,
-        private val sharedPreferences: Preferences
+    private val coroutineContext : CoroutineContextProvider,
+    private val userRepository: UserRepository,
+    private val loginRepository: LoginRepository,
+    private val sharedPreferences: Preferences
 ) : ViewModel() {
 
     // eventHandler sends event feedback to UI layer(Fragment)
@@ -49,7 +49,7 @@ class UserListViewModel @Inject constructor(
     }
 
     private fun getUserInfo(){
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch(coroutineContext.IO) {
             Timber.tag("getUserInfo-VMScope").d("Top-level: current thread is ${Thread.currentThread().name}")
             val userId = sharedPreferences.getStoredTag(LocalPreferenceConfig.USER_ID) ?: ""
             val userName = sharedPreferences.getStoredTag(LocalPreferenceConfig.USER_NAME) ?: ""
@@ -74,7 +74,7 @@ class UserListViewModel @Inject constructor(
 
     /** bind to sign out button. **/
     fun signOut(){
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch(coroutineContext.IO) {
             Timber.tag("signOut-VMScope").d("Top-level: current thread is ${Thread.currentThread().name}")
             when(val signOutResponse = loginRepository.signOut()) {
                 is Resource.Success -> {

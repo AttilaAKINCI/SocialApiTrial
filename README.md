@@ -1,5 +1,4 @@
 # SocialApiTrial
-
 SocialApiTrial is a proof of concept application of Twitter API services without using any 3rd party twitter library. 
 Contains pure Twitter API refenrence integrations
 
@@ -34,12 +33,13 @@ Fragments :
 * Timber Client logging
 * Dependency Injection (HILT) 
 * DataBinding
-* Thruth (assertions)
 * RecyclerView with List Adapter and DiffUtil
 * ViewPager 2 and Tablayout
 * Single Activity multiple Fragments approach
 * Unit testing samples & HILT integrations for testing
 * MockK library for unit testing
+* Junit5
+* Thruth (assertions)
 
 ## Twitter API Service Integrations
 * POST oauth/request_token		-> request token
@@ -138,3 +138,4 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 ```
+

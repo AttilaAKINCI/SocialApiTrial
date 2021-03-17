@@ -4,19 +4,20 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.akinci.socialapitrial.common.coroutine.CoroutineContextProvider
 import com.akinci.socialapitrial.common.helper.Event
 import com.akinci.socialapitrial.common.helper.Resource
 import com.akinci.socialapitrial.feature.secure.user.data.output.userlist.UserResponse
 import com.akinci.socialapitrial.feature.secure.user.repository.UserRepository
 import com.akinci.socialapitrial.feature.secure.user.userlist.adapter.viewpager.ViewPagerMode
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import timber.log.Timber
 import javax.inject.Inject
 
 @HiltViewModel
 class UserListContentViewModel @Inject constructor(
+    private val coroutineContext : CoroutineContextProvider,
     private val userRepository: UserRepository
 ) : ViewModel() {
 
@@ -70,7 +71,7 @@ class UserListContentViewModel @Inject constructor(
     }
 
     private fun getFollowers(){
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch(coroutineContext.IO) {
             Timber.tag("getFollowers-VMScope").d("Top-level: current thread is ${Thread.currentThread().name}")
             when(val followersResponse = userRepository.fetchFollowers(followersCursor)) {
                 is Resource.Success -> {
@@ -93,7 +94,7 @@ class UserListContentViewModel @Inject constructor(
     }
 
     private fun getFollowings(){
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch(coroutineContext.IO) {
             Timber.tag("getFollowings-VMScope").d("Top-level: current thread is ${Thread.currentThread().name}")
             when(val followingsResponse = userRepository.fetchFollowings(followingsCursor)) {
                 is Resource.Success -> {
