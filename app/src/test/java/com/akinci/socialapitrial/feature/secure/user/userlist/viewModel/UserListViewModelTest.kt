@@ -11,7 +11,10 @@ import com.akinci.socialapitrial.feature.secure.login.data.output.SignOutRespons
 import com.akinci.socialapitrial.feature.secure.login.repository.LoginRepository
 import com.akinci.socialapitrial.feature.secure.user.data.output.userlist.UserResponse
 import com.akinci.socialapitrial.feature.secure.user.repository.UserRepository
+import com.akinci.socialapitrial.jsonresponses.GetSignOutResponse
+import com.akinci.socialapitrial.jsonresponses.GetUserResponse
 import com.google.common.truth.Truth.assertThat
+import com.squareup.moshi.Moshi
 import io.mockk.*
 import io.mockk.impl.annotations.MockK
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -36,6 +39,7 @@ class UserListViewModelTest {
     lateinit var userListViewModel : UserListViewModel
 
     private val coroutineContext = TestContextProvider()
+    private val moshi = Moshi.Builder().build()
 
     @BeforeEach
     fun setUp() {
@@ -51,22 +55,9 @@ class UserListViewModelTest {
     fun `getUserInfo get success response then sets userInfo`(){
         every { sharedPreferences.getStoredTag(LocalPreferenceConfig.USER_ID) } returns "10"
         every { sharedPreferences.getStoredTag(LocalPreferenceConfig.USER_NAME) } returns "Dummy"
-        coEvery { userRepository.getUserInfo(any(), any()) } returns
-                Resource.Success(
-                        UserResponse(
-                        1L,
-                        "TestName",
-                        "ScreenTestName",
-                        "Ist",
-                        "Unknown",
-                        10,
-                        11,
-                        true,
-                        "https://backgroundImage.com",
-                        "https://profileImage.com",
-                        "https://profileBanner.com"
-                    )
-                )
+        coEvery { userRepository.getUserInfo(any(), any()) } returns Resource.Success(
+            moshi.adapter(UserResponse::class.java).fromJson(GetUserResponse.userJsonResponse)
+        )
 
         val observer = mockk<Observer<UserResponse>>(relaxed = true)
         val slot = slot<UserResponse>()
@@ -78,9 +69,9 @@ class UserListViewModelTest {
         verify { observer.onChanged(capture(slot)) }
 
         val value = slot.captured
-        assertThat(value.name).isEqualTo("TestName")
-        assertThat(value.id).isEqualTo("1".toLong())
-        assertThat(value.screen_name).isEqualTo("ScreenTestName")
+        assertThat(value.name).isEqualTo("Vildan")
+        assertThat(value.id).isEqualTo("1336170512814457473".toLong())
+        assertThat(value.screen_name).isEqualTo("Vildan")
 
         verify (exactly = 2) { sharedPreferences.getStoredTag(any()) }
     }
@@ -106,11 +97,9 @@ class UserListViewModelTest {
 
     @Test
     fun `signOut gets error response sends Resource Error`(){
-        coEvery { loginRepository.signOut() } returns
-                Resource.Success(SignOutResponse(
-                    "asdasasdfdvcasdda"
-                )
-            )
+        coEvery { loginRepository.signOut() } returns Resource.Success(
+            moshi.adapter(SignOutResponse::class.java).fromJson(GetSignOutResponse.signOutResponse)
+        )
 
         userListViewModel.eventHandler.observeForever{
             assertThat(it).isNotNull()

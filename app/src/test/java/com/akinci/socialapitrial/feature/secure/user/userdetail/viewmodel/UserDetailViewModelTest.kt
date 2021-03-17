@@ -5,10 +5,17 @@ import com.akinci.socialapitrial.ahelpers.InstantExecutorExtension
 import com.akinci.socialapitrial.ahelpers.TestContextProvider
 import com.akinci.socialapitrial.common.helper.Event
 import com.akinci.socialapitrial.common.helper.Resource
+import com.akinci.socialapitrial.feature.login.data.output.AccessTokenResponse
 import com.akinci.socialapitrial.feature.secure.user.data.output.userdetail.UserTimeLineResponse
 import com.akinci.socialapitrial.feature.secure.user.data.output.userlist.UserResponse
 import com.akinci.socialapitrial.feature.secure.user.repository.UserRepository
+import com.akinci.socialapitrial.jsonresponses.GetAccessToken
+import com.akinci.socialapitrial.jsonresponses.GetUserResponse
+import com.akinci.socialapitrial.jsonresponses.GetUserTimeLine
 import com.google.common.truth.Truth.assertThat
+import com.squareup.moshi.JsonAdapter
+import com.squareup.moshi.Moshi
+import com.squareup.moshi.Types
 import io.mockk.*
 import io.mockk.impl.annotations.MockK
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -27,6 +34,7 @@ class UserDetailViewModelTest {
     lateinit var userDetailViewModel : UserDetailViewModel
 
     private val coroutineContext = TestContextProvider()
+    private val moshi = Moshi.Builder().build()
 
     @BeforeEach
     fun setUp() {
@@ -39,21 +47,9 @@ class UserDetailViewModelTest {
 
     @Test
     fun `getUserInfo get success response then sets userInfo`(){
-        coEvery { userRepository.getUserInfo(any(), any()) } returns
-                Resource.Success(UserResponse(
-                    1L,
-                    "TestName",
-                    "ScreenTestName",
-                    "Ist",
-                    "Unknown",
-                    10,
-                    11,
-                    true,
-                    "https://backgroundImage.com",
-                    "https://profileImage.com",
-                    "https://profileBanner.com"
-                    )
-                )
+        coEvery { userRepository.getUserInfo(any(), any()) } returns Resource.Success(
+            moshi.adapter(UserResponse::class.java).fromJson(GetUserResponse.userJsonResponse)
+        )
 
         val observer = mockk<Observer<UserResponse>>(relaxed = true)
         val slot = slot<UserResponse>()
@@ -65,9 +61,9 @@ class UserDetailViewModelTest {
         verify { observer.onChanged(capture(slot)) }
 
         val value = slot.captured
-        assertThat(value.name).isEqualTo("TestName")
-        assertThat(value.id).isEqualTo("1".toLong())
-        assertThat(value.screen_name).isEqualTo("ScreenTestName")
+        assertThat(value.name).isEqualTo("Vildan")
+        assertThat(value.id).isEqualTo("1336170512814457473".toLong())
+        assertThat(value.screen_name).isEqualTo("Vildan")
     }
 
     @Test
@@ -89,49 +85,12 @@ class UserDetailViewModelTest {
 
     @Test
     fun `getUserTimeLine get success response then sends Resource Success`(){
-        coEvery { userRepository.getUserTimeLine(any(), any()) } returns
-                Resource.Success( listOf(
-                        UserTimeLineResponse(
-                        1L,
-                        "UserTimeLine",
-                        null,
-                         UserResponse(
-                                1L,
-                                "TestName",
-                                "ScreenTestName",
-                                "Ist",
-                                "Unknown",
-                                10,
-                                11,
-                                true,
-                                "https://backgroundImage.com",
-                                "https://profileImage.com",
-                                "https://profileBanner.com"
-                            ),
-                        "SomeTime"
-                        ),
-                        UserTimeLineResponse(
-                            2L,
-                            "UserTimeLine2",
-                            null,
-                            UserResponse(
-                                1L,
-                                "TestName2",
-                                "ScreenTestName2",
-                                "Ist2",
-                                "Unknown2",
-                                101,
-                                111,
-                                true,
-                                "https://backgroundImage2.com",
-                                "https://profileImage2.com",
-                                "https://profileBanner2.com"
-                            ),
-                            "SomeTime2"
-                        )
-                    )
-                )
+        val type = Types.newParameterizedType(List::class.java, UserTimeLineResponse::class.java)
+        val adapter : JsonAdapter<List<UserTimeLineResponse>> = moshi.adapter(type)
 
+        coEvery { userRepository.getUserTimeLine(any(), any()) } returns Resource.Success(
+            adapter.fromJson(GetUserTimeLine.userTimeLineJsonResponse)
+        )
 
         val observer = mockk<Observer<Event<Resource<List<UserTimeLineResponse>>>>>(relaxed = true)
         val slot = slot<Event<Resource<List<UserTimeLineResponse>>>>()
@@ -147,10 +106,8 @@ class UserDetailViewModelTest {
         assertThat(value.data?.size).isGreaterThan(0)
 
         val userTimeLineResponse = value.data?.get(0)
-        val userTimeLineResponse2 = value.data?.get(1)
 
-        assertThat(userTimeLineResponse?.user?.name).isEqualTo("TestName")
-        assertThat(userTimeLineResponse2?.user?.name).isEqualTo("TestName2")
+        assertThat(userTimeLineResponse?.user?.name).isEqualTo("Vildan")
     }
 
     @Test

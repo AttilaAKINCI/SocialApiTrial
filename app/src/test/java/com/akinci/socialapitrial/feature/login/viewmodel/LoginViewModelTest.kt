@@ -9,7 +9,10 @@ import com.akinci.socialapitrial.common.storage.Preferences
 import com.akinci.socialapitrial.feature.login.data.output.AccessTokenResponse
 import com.akinci.socialapitrial.feature.login.data.output.RequestTokenResponse
 import com.akinci.socialapitrial.feature.login.repository.LoginRepository
+import com.akinci.socialapitrial.jsonresponses.GetAccessToken
+import com.akinci.socialapitrial.jsonresponses.GetRequestToken
 import com.google.common.truth.Truth.assertThat
+import com.squareup.moshi.Moshi
 import io.mockk.*
 import io.mockk.impl.annotations.MockK
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -31,6 +34,7 @@ class LoginViewModelTest {
     lateinit var loginViewModel : LoginViewModel
 
     private val coroutineContext = TestContextProvider()
+    private val moshi = Moshi.Builder().build()
 
     @BeforeEach
     fun setUp() {
@@ -45,10 +49,13 @@ class LoginViewModelTest {
 
     @Test
     fun `action sign in with twitter for already logged in user`() {
-        every { sharedPreferences.getStoredTag(any()) } returns "Dummy"
         loginViewModel = LoginViewModel(coroutineContext, loginRepository, sharedPreferences)
 
-        coEvery { loginRepository.requestToken() } returns Resource.Success(RequestTokenResponse("authToken", "authTokenSecret"))
+        every { sharedPreferences.getStoredTag(any()) } returns "Dummy"
+
+        coEvery { loginRepository.requestToken() } returns Resource.Success(
+            moshi.adapter(RequestTokenResponse::class.java).fromJson(GetRequestToken.requestTokenJsonResponse)
+        )
 
         loginViewModel.loginEventHandler.observeForever {
             assertThat(it).isNotNull()
@@ -69,7 +76,9 @@ class LoginViewModelTest {
 
     @Test
     fun `action sign in with twitter, first login, set tokens to shared preferences, send authorizeEventHandler success for Success Resource`() {
-        coEvery { loginRepository.requestToken() } returns Resource.Success(RequestTokenResponse("authToken", "authTokenSecret"))
+        coEvery { loginRepository.requestToken() } returns Resource.Success(
+            moshi.adapter(RequestTokenResponse::class.java).fromJson(GetRequestToken.requestTokenJsonResponse)
+        )
         justRun { sharedPreferences.setStoredTag(any(), any()) }
 
         val observer = mockk<Observer<Event<Resource<String>>>>(relaxed = true)
@@ -107,12 +116,7 @@ class LoginViewModelTest {
     @Test
     fun `get access token, successful service return`() {
         coEvery { loginRepository.getAccessToken(any(), any()) } returns Resource.Success(
-            AccessTokenResponse(
-                "jlkashdlkjashndjl",
-                "uhdushdushdu",
-                "10",
-                "UnitTest"
-                )
+            moshi.adapter(AccessTokenResponse::class.java).fromJson(GetAccessToken.accessTokenJsonResponse)
         )
 
         loginViewModel.loginEventHandler.observeForever {

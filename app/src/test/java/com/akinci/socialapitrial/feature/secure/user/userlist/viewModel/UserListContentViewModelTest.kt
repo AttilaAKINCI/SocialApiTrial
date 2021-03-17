@@ -7,7 +7,9 @@ import com.akinci.socialapitrial.feature.secure.user.data.output.userlist.Follow
 import com.akinci.socialapitrial.feature.secure.user.data.output.userlist.UserResponse
 import com.akinci.socialapitrial.feature.secure.user.repository.UserRepository
 import com.akinci.socialapitrial.feature.secure.user.userlist.adapter.viewpager.ViewPagerMode
+import com.akinci.socialapitrial.jsonresponses.GetFollowerOrFriendResponse
 import com.google.common.truth.Truth.assertThat
+import com.squareup.moshi.Moshi
 import io.mockk.MockKAnnotations
 import io.mockk.coEvery
 import io.mockk.impl.annotations.MockK
@@ -28,6 +30,7 @@ class UserListContentViewModelTest {
     lateinit var userListContentViewModel : UserListContentViewModel
 
     private val coroutineContext = TestContextProvider()
+    private val moshi = Moshi.Builder().build()
 
     @BeforeEach
     fun setUp() {
@@ -40,7 +43,9 @@ class UserListContentViewModelTest {
 
     @Test
     fun `getFollowers returns Success`(){
-        coEvery { userRepository.fetchFollowers(any()) } returns Resource.Success( getFollowerOrFriendDummyData() )
+        coEvery { userRepository.fetchFollowers(any()) } returns Resource.Success(
+            moshi.adapter(FollowerOrFriendResponse::class.java).fromJson(GetFollowerOrFriendResponse.followerOrFriendResponse)
+        )
 
         userListContentViewModel.followersEventHandler.observeForever{
             assertThat(it).isNotNull()
@@ -52,7 +57,7 @@ class UserListContentViewModelTest {
 
                     val user = value.data?.get(0)
 
-                    assertThat(user?.name).isEqualTo("TestName")
+                    assertThat(user?.name).isEqualTo("Vildan")
                 }
             }
         }
@@ -62,7 +67,9 @@ class UserListContentViewModelTest {
 
     @Test
     fun `getFollowings returns Success`(){
-        coEvery { userRepository.fetchFollowings(any()) } returns Resource.Success( getFollowerOrFriendDummyData() )
+        coEvery { userRepository.fetchFollowings(any()) } returns Resource.Success(
+            moshi.adapter(FollowerOrFriendResponse::class.java).fromJson(GetFollowerOrFriendResponse.followerOrFriendResponse)
+        )
 
         userListContentViewModel.friendsEventHandler.observeForever{
             assertThat(it).isNotNull()
@@ -74,7 +81,7 @@ class UserListContentViewModelTest {
 
                     val user = value.data?.get(0)
 
-                    assertThat(user?.name).isEqualTo("TestName")
+                    assertThat(user?.name).isEqualTo("Vildan")
                 }
             }
         }
@@ -112,45 +119,6 @@ class UserListContentViewModelTest {
         }
 
         userListContentViewModel.fetchInitialData(ViewPagerMode.FRIENDS)
-    }
-
-    /** Dummy Data **/
-    private fun getFollowerOrFriendDummyData() : FollowerOrFriendResponse{
-        return FollowerOrFriendResponse(
-            10L,
-            "10L",
-            1L,
-            "1L",
-            100,
-             listOf(
-                UserResponse(
-                    1L,
-                    "TestName",
-                    "ScreenTestName",
-                    "Ist",
-                    "Unknown",
-                    10,
-                    11,
-                    true,
-                    "https://backgroundImage.com",
-                    "https://profileImage.com",
-                    "https://profileBanner.com"
-                ),
-                UserResponse(
-                    1L,
-                    "TestName",
-                    "ScreenTestName",
-                    "Ist",
-                    "Unknown",
-                    10,
-                    11,
-                    true,
-                    "https://backgroundImage.com",
-                    "https://profileImage.com",
-                    "https://profileBanner.com"
-                )
-            )
-        )
     }
 
 }
