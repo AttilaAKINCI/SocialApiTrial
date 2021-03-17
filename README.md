@@ -33,12 +33,13 @@ Fragments :
 * Timber Client logging
 * Dependency Injection (HILT) 
 * DataBinding
-* Thruth (assertions)
 * RecyclerView with List Adapter and DiffUtil
 * ViewPager 2 and Tablayout
 * Single Activity multiple Fragments approach
 * Unit testing samples & HILT integrations for testing
 * MockK library for unit testing
+* Junit5
+* Thruth (assertions)
 
 ## Twitter API Service Integrations
 * POST oauth/request_token		-> request token
