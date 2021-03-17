@@ -4,7 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.akinci.socialapitrial.common.coroutines.CoroutineContextProvider
+import com.akinci.socialapitrial.common.coroutine.CoroutineContextProvider
 import com.akinci.socialapitrial.common.helper.Event
 import com.akinci.socialapitrial.common.helper.Resource
 import com.akinci.socialapitrial.common.network.RestConfig

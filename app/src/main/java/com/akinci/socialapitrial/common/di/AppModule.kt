@@ -1,7 +1,7 @@
 package com.akinci.socialapitrial.common.di
 
 import android.content.Context
-import com.akinci.socialapitrial.common.coroutines.CoroutineContextProvider
+import com.akinci.socialapitrial.common.coroutine.CoroutineContextProvider
 import com.akinci.socialapitrial.common.network.NetworkChecker
 import com.akinci.socialapitrial.common.network.RestConfig
 import com.akinci.socialapitrial.common.storage.LocalPreferences

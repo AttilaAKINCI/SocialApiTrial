@@ -1,44 +1,40 @@
 package com.akinci.socialapitrial.feature.secure.user.userdetail.viewmodel
 
-import androidx.arch.core.executor.testing.InstantTaskExecutorRule
-import com.akinci.socialapitrial.common.coroutines.TestContextProvider
+import androidx.lifecycle.Observer
+import com.akinci.socialapitrial.ahelpers.InstantExecutorExtension
+import com.akinci.socialapitrial.ahelpers.TestContextProvider
+import com.akinci.socialapitrial.common.helper.Event
 import com.akinci.socialapitrial.common.helper.Resource
 import com.akinci.socialapitrial.feature.secure.user.data.output.userdetail.UserTimeLineResponse
 import com.akinci.socialapitrial.feature.secure.user.data.output.userlist.UserResponse
 import com.akinci.socialapitrial.feature.secure.user.repository.UserRepository
 import com.google.common.truth.Truth.assertThat
-import io.mockk.MockKAnnotations
-import io.mockk.coEvery
+import io.mockk.*
 import io.mockk.impl.annotations.MockK
-import io.mockk.unmockkAll
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import org.junit.After
-import org.junit.Before
-import org.junit.Rule
-import org.junit.Test
-import org.junit.rules.TestRule
+import org.junit.jupiter.api.AfterEach
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.extension.ExtendWith
 
+@ExperimentalCoroutinesApi
+@ExtendWith(InstantExecutorExtension::class)
 class UserDetailViewModelTest {
-    @get:Rule
-    var rule: TestRule = InstantTaskExecutorRule() // for live data usage
 
     @MockK
     lateinit var userRepository: UserRepository
 
     lateinit var userDetailViewModel : UserDetailViewModel
-    @ExperimentalCoroutinesApi
-    lateinit var coroutineContext : TestContextProvider
 
-    @ExperimentalCoroutinesApi
-    @Before
+    private val coroutineContext = TestContextProvider()
+
+    @BeforeEach
     fun setUp() {
         MockKAnnotations.init(this, relaxUnitFun = true)
-
-        coroutineContext = TestContextProvider()
         userDetailViewModel = UserDetailViewModel(coroutineContext, userRepository)
     }
 
-    @After
+    @AfterEach
     fun tearDown() { unmockkAll() }
 
     @Test
@@ -59,29 +55,36 @@ class UserDetailViewModelTest {
                     )
                 )
 
-        userDetailViewModel.userInfo.observeForever{
-            assertThat(it.name).isEqualTo("TestName")
-            assertThat(it.id).isEqualTo("1".toLong())
-            assertThat(it.screen_name).isEqualTo("ScreenTestName")
-        }
+        val observer = mockk<Observer<UserResponse>>(relaxed = true)
+        val slot = slot<UserResponse>()
+
+        userDetailViewModel.userInfo.observeForever(observer)
 
         userDetailViewModel.getUserInfo(1L, "SampleName")
+
+        verify { observer.onChanged(capture(slot)) }
+
+        val value = slot.captured
+        assertThat(value.name).isEqualTo("TestName")
+        assertThat(value.id).isEqualTo("1".toLong())
+        assertThat(value.screen_name).isEqualTo("ScreenTestName")
     }
 
     @Test
     fun `getUserInfo gets error response sends Resource Error`(){
         coEvery { userRepository.getUserInfo(any(), any()) } returns Resource.Error("Get User Info Service Encountered an Error")
 
-        userDetailViewModel.eventHandler.observeForever{
-            assertThat(it).isNotNull()
-            when(val value = it.getContentIfNotHandled()){
-                is Resource.Error -> {
-                    assertThat(value.message).isEqualTo("Get User Info Service Encountered an Error")
-                }
-            }
-        }
+        val observer = mockk<Observer<Event<Resource<List<UserTimeLineResponse>>>>>(relaxed = true)
+        val slot = slot<Event<Resource<List<UserTimeLineResponse>>>>()
+
+        userDetailViewModel.eventHandler.observeForever(observer)
 
         userDetailViewModel.getUserInfo(1L, "SampleName")
+
+        verify { observer.onChanged(capture(slot)) }
+
+        val value = slot.captured.getContentIfNotHandled() as Resource.Error
+        assertThat(value.message).isEqualTo("Get User Info Service Encountered an Error")
     }
 
     @Test
@@ -129,39 +132,42 @@ class UserDetailViewModelTest {
                     )
                 )
 
-        userDetailViewModel.eventHandler.observeForever{
-            assertThat(it).isNotNull()
-            when(val value = it.getContentIfNotHandled()){
-                is Resource.Success -> {
-                    assertThat(value.data).isNotEmpty()
-                    assertThat(value.data?.size).isGreaterThan(0)
 
-                    val userTimeLineResponse = value.data?.get(0)
-                    val userTimeLineResponse2 = value.data?.get(1)
+        val observer = mockk<Observer<Event<Resource<List<UserTimeLineResponse>>>>>(relaxed = true)
+        val slot = slot<Event<Resource<List<UserTimeLineResponse>>>>()
 
-                    assertThat(userTimeLineResponse?.user?.name).isEqualTo("TestName")
-                    assertThat(userTimeLineResponse2?.user?.name).isEqualTo("TestName2")
-                }
-            }
-        }
+        userDetailViewModel.eventHandler.observeForever(observer)
 
         userDetailViewModel.getUserTimeLine(1L)
+
+        verify { observer.onChanged(capture(slot)) }
+
+        val value = slot.captured.getContentIfNotHandled() as Resource.Success
+        assertThat(value.data).isNotEmpty()
+        assertThat(value.data?.size).isGreaterThan(0)
+
+        val userTimeLineResponse = value.data?.get(0)
+        val userTimeLineResponse2 = value.data?.get(1)
+
+        assertThat(userTimeLineResponse?.user?.name).isEqualTo("TestName")
+        assertThat(userTimeLineResponse2?.user?.name).isEqualTo("TestName2")
     }
 
     @Test
     fun `getUserTimeLine get error response then sends Resource Error`(){
         coEvery { userRepository.getUserTimeLine(any(), any()) } returns Resource.Error("Get Time Line Service Encountered an Error")
 
-        userDetailViewModel.eventHandler.observeForever{
-            assertThat(it).isNotNull()
-            when(val value = it.getContentIfNotHandled()){
-                is Resource.Error -> {
-                    assertThat(value.message).isEqualTo("Get Time Line Service Encountered an Error")
-                }
-            }
-        }
+        val observer = mockk<Observer<Event<Resource<List<UserTimeLineResponse>>>>>(relaxed = true)
+        val slot = slot<Event<Resource<List<UserTimeLineResponse>>>>()
+
+        userDetailViewModel.eventHandler.observeForever(observer)
 
         userDetailViewModel.getUserTimeLine(1L)
+
+        verify { observer.onChanged(capture(slot)) }
+
+        val value = slot.captured.getContentIfNotHandled() as Resource.Error
+        assertThat(value.message).isEqualTo("Get Time Line Service Encountered an Error")
     }
 
 }

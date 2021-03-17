@@ -1,4 +1,4 @@
-package com.akinci.socialapitrial.common.coroutines
+package com.akinci.socialapitrial.common.coroutine
 
 import kotlinx.coroutines.Dispatchers
 import kotlin.coroutines.CoroutineContext

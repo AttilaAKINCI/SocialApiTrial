@@ -1,7 +1,7 @@
 package com.akinci.socialapitrial.feature.secure.user.userlist.viewModel
 
-import androidx.arch.core.executor.testing.InstantTaskExecutorRule
-import com.akinci.socialapitrial.common.coroutines.TestContextProvider
+import com.akinci.socialapitrial.ahelpers.InstantExecutorExtension
+import com.akinci.socialapitrial.ahelpers.TestContextProvider
 import com.akinci.socialapitrial.common.helper.Resource
 import com.akinci.socialapitrial.feature.secure.user.data.output.userlist.FollowerOrFriendResponse
 import com.akinci.socialapitrial.feature.secure.user.data.output.userlist.UserResponse
@@ -13,32 +13,29 @@ import io.mockk.coEvery
 import io.mockk.impl.annotations.MockK
 import io.mockk.unmockkAll
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import org.junit.After
-import org.junit.Before
-import org.junit.Rule
-import org.junit.Test
-import org.junit.rules.TestRule
+import org.junit.jupiter.api.AfterEach
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.extension.ExtendWith
 
+@ExperimentalCoroutinesApi
+@ExtendWith(InstantExecutorExtension::class)
 class UserListContentViewModelTest {
-    @get:Rule
-    var rule: TestRule = InstantTaskExecutorRule() // for live data usage
 
     @MockK
     lateinit var userRepository: UserRepository
 
     lateinit var userListContentViewModel : UserListContentViewModel
-    @ExperimentalCoroutinesApi
-    lateinit var coroutineContext : TestContextProvider
 
-    @ExperimentalCoroutinesApi
-    @Before
+    private val coroutineContext = TestContextProvider()
+
+    @BeforeEach
     fun setUp() {
         MockKAnnotations.init(this, relaxUnitFun = true)
-        coroutineContext = TestContextProvider()
         userListContentViewModel = UserListContentViewModel(coroutineContext, userRepository)
     }
 
-    @After
+    @AfterEach
     fun tearDown() { unmockkAll() }
 
     @Test
@@ -61,7 +58,6 @@ class UserListContentViewModelTest {
         }
 
         userListContentViewModel.fetchInitialData(ViewPagerMode.FOLLOWERS)
-
     }
 
     @Test

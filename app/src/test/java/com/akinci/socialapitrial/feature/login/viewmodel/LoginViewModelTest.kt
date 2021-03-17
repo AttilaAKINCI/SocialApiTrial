@@ -1,7 +1,9 @@
 package com.akinci.socialapitrial.feature.login.viewmodel
 
-import androidx.arch.core.executor.testing.InstantTaskExecutorRule
-import com.akinci.socialapitrial.common.coroutines.TestContextProvider
+import androidx.lifecycle.Observer
+import com.akinci.socialapitrial.ahelpers.InstantExecutorExtension
+import com.akinci.socialapitrial.ahelpers.TestContextProvider
+import com.akinci.socialapitrial.common.helper.Event
 import com.akinci.socialapitrial.common.helper.Resource
 import com.akinci.socialapitrial.common.storage.Preferences
 import com.akinci.socialapitrial.feature.login.data.output.AccessTokenResponse
@@ -11,19 +13,14 @@ import com.google.common.truth.Truth.assertThat
 import io.mockk.*
 import io.mockk.impl.annotations.MockK
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import org.junit.After
-import org.junit.Before
-import org.junit.Rule
-import org.junit.Test
-import org.junit.rules.TestRule
-import org.junit.runner.RunWith
-import org.junit.runners.JUnit4
+import org.junit.jupiter.api.AfterEach
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.extension.ExtendWith
 
-@RunWith(JUnit4::class)
+@ExperimentalCoroutinesApi
+@ExtendWith(InstantExecutorExtension::class)
 class LoginViewModelTest {
-
-    @get:Rule
-    var rule: TestRule = InstantTaskExecutorRule() // for live data usage
 
     @MockK
     lateinit var loginRepository: LoginRepository
@@ -32,23 +29,20 @@ class LoginViewModelTest {
     lateinit var sharedPreferences: Preferences
 
     lateinit var loginViewModel : LoginViewModel
-    @ExperimentalCoroutinesApi
-    lateinit var coroutineContext : TestContextProvider
 
-    @ExperimentalCoroutinesApi
-    @Before
+    private val coroutineContext = TestContextProvider()
+
+    @BeforeEach
     fun setUp() {
         MockKAnnotations.init(this, relaxUnitFun = true)
         every { sharedPreferences.getStoredTag(any()) } returns ""
 
-        coroutineContext = TestContextProvider()
         loginViewModel = LoginViewModel(coroutineContext, loginRepository, sharedPreferences)
     }
 
-    @After
+    @AfterEach
     fun tearDown() { unmockkAll() }
 
-    @ExperimentalCoroutinesApi
     @Test
     fun `action sign in with twitter for already logged in user`() {
         every { sharedPreferences.getStoredTag(any()) } returns "Dummy"
@@ -78,16 +72,17 @@ class LoginViewModelTest {
         coEvery { loginRepository.requestToken() } returns Resource.Success(RequestTokenResponse("authToken", "authTokenSecret"))
         justRun { sharedPreferences.setStoredTag(any(), any()) }
 
-        loginViewModel.authorizeEventHandler.observeForever {
-            assertThat(it).isNotNull()
-            when(val value = it.getContentIfNotHandled()){
-                is Resource.Success -> {
-                    assertThat(value.data).contains("oauth_token")
-                }
-            }
-        }
+        val observer = mockk<Observer<Event<Resource<String>>>>(relaxed = true)
+        val slot = slot<Event<Resource<String>>>()
+
+        loginViewModel.authorizeEventHandler.observeForever(observer)
 
         loginViewModel.actionSignInWithTwitter()
+
+        verify { observer.onChanged(capture(slot)) }
+
+        val value = slot.captured.getContentIfNotHandled() as Resource.Success
+        assertThat(value.data).contains("oauth_token")
 
         verify (exactly = 2) { sharedPreferences.setStoredTag(any(), any()) }
     }
@@ -96,19 +91,19 @@ class LoginViewModelTest {
     fun `action sign in with twitter, first login request token returns Resource Error`() {
         coEvery { loginRepository.requestToken() } returns Resource.Error("Request Token Service Encountered an Error")
 
-        loginViewModel.authorizeEventHandler.observeForever {
-            assertThat(it).isNotNull()
-            when(val value = it.getContentIfNotHandled()){
-                is Resource.Error -> {
-                    assertThat(value.message).isEqualTo("Request Token Service Encountered an Error")
-                }
-            }
-        }
+        val observer = mockk<Observer<Event<Resource<String>>>>(relaxed = true)
+        val slot = slot<Event<Resource<String>>>()
+
+        loginViewModel.authorizeEventHandler.observeForever(observer)
 
         loginViewModel.actionSignInWithTwitter()
+
+        verify { observer.onChanged(capture(slot)) }
+
+        val value = slot.captured.getContentIfNotHandled() as Resource.Error
+        assertThat(value.message).isEqualTo("Request Token Service Encountered an Error")
     }
 
-    @ExperimentalCoroutinesApi
     @Test
     fun `get access token, successful service return`() {
         coEvery { loginRepository.getAccessToken(any(), any()) } returns Resource.Success(
@@ -144,19 +139,19 @@ class LoginViewModelTest {
     fun `get access token, returns Resource Error`() {
         coEvery { loginRepository.getAccessToken(any(), any()) } returns Resource.Error("Get Access Token Service Encountered an Error")
 
-        loginViewModel.loginEventHandler.observeForever {
-            assertThat(it).isNotNull()
-            when(val value = it.getContentIfNotHandled()){
-                is Resource.Error -> {
-                    assertThat(value.message).isEqualTo("Get Access Token Service Encountered an Error")
-                }
-            }
-        }
+        val observer = mockk<Observer<Event<Resource<String>>>>(relaxed = true)
+        val slot = slot<Event<Resource<String>>>()
+
+        loginViewModel.loginEventHandler.observeForever(observer)
 
         loginViewModel.getAccessToken()
 
+        verify { observer.onChanged(capture(slot)) }
+
+        val value = slot.captured.getContentIfNotHandled() as Resource.Error
+        assertThat(value.message).isEqualTo("Get Access Token Service Encountered an Error")
+
         verify (exactly = 3) { sharedPreferences.getStoredTag(any()) }
     }
-
 
 }

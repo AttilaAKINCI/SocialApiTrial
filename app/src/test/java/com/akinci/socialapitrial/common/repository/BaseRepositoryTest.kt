@@ -9,9 +9,9 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runBlockingTest
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.ResponseBody.Companion.toResponseBody
-import org.junit.After
-import org.junit.Before
-import org.junit.Test
+import org.junit.jupiter.api.AfterEach
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
 import retrofit2.Response
 
 @ExperimentalCoroutinesApi
@@ -25,13 +25,13 @@ class BaseRepositoryTest {
     @MockK
     lateinit var callBackObj : SuspendingCallBack
 
-    @Before
+    @BeforeEach
     fun setUp() {
         MockKAnnotations.init(this, relaxUnitFun = true)
         repository = BaseRepositoryImpl(networkChecker)
     }
 
-    @After
+    @AfterEach
     fun tearDown() { unmockkAll() }
 
     class SuspendingCallBack {
@@ -57,7 +57,6 @@ class BaseRepositoryTest {
         every { networkChecker.isNetworkConnected() } returns true
         coEvery { callBackObj.serviceActionCallBack() } returns Response.success("Rest Call Succeeded")
 
-        /** A-MODEL TEST **/
         val callServiceResponseObjStr = repository.callService { callBackObj.serviceActionCallBack() }
 
         /** repository function response type should be Resource.Success **/
@@ -75,8 +74,6 @@ class BaseRepositoryTest {
         every { networkChecker.isNetworkConnected() } returns true
         coEvery { callBackObj.serviceActionCallBack() } returns Response.success("Rest Call Succeeded")
         coEvery { callBackObj.responseMappingActionCallBack(any()) } returns Resource.Success(200)
-
-        /** B-MODEL TEST **/
 
         val callServiceResponseObj = repository.callService(
             retrofitServiceAction = { callBackObj.serviceActionCallBack() },
@@ -96,7 +93,6 @@ class BaseRepositoryTest {
             callBackObj.responseMappingActionCallBack(any())
         }
         confirmVerified(callBackObj)
-
     }
 
     @Test
@@ -121,8 +117,6 @@ class BaseRepositoryTest {
         every { networkChecker.isNetworkConnected() } returns true
         coEvery { callBackObj.serviceActionCallBack() } returns Response.success(null)
         coEvery { callBackObj.responseMappingActionCallBack(any()) } returns Resource.Success(200)
-
-        /** B-MODEL TEST **/
 
         val callServiceResponseObj = repository.callService(
             retrofitServiceAction = { callBackObj.serviceActionCallBack() },
@@ -167,8 +161,6 @@ class BaseRepositoryTest {
             .toResponseBody("application/json".toMediaTypeOrNull()))
         coEvery { callBackObj.responseMappingActionCallBack(any()) } returns Resource.Success(200)
 
-        /** B-MODEL TEST **/
-
         val callServiceResponseObj = repository.callService(
             retrofitServiceAction = { callBackObj.serviceActionCallBack() },
             customResponseMappingAction = {
@@ -211,8 +203,6 @@ class BaseRepositoryTest {
         every { networkChecker.isNetworkConnected() } returns false
         coEvery { callBackObj.serviceActionCallBack() } returns Response.success("Rest Call Succeeded")
         coEvery { callBackObj.responseMappingActionCallBack(any()) } returns Resource.Success(200)
-
-        /** B-MODEL TEST **/
 
         val callServiceResponseObj = repository.callService(
             retrofitServiceAction = { callBackObj.serviceActionCallBack() },
@@ -257,8 +247,6 @@ class BaseRepositoryTest {
         every { networkChecker.isNetworkConnected() } returns true
         coEvery { callBackObj.serviceActionCallBack() } throws Exception()
         coEvery { callBackObj.responseMappingActionCallBack(any()) } returns Resource.Success(200)
-
-        /** B-MODEL TEST **/
 
         val callServiceResponseObj = repository.callService(
             retrofitServiceAction = { callBackObj.serviceActionCallBack() },

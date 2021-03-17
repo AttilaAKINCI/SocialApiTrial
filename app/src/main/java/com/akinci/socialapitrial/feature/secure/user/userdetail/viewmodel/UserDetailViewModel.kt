@@ -4,18 +4,16 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.akinci.socialapitrial.common.coroutines.CoroutineContextProvider
+import com.akinci.socialapitrial.common.coroutine.CoroutineContextProvider
 import com.akinci.socialapitrial.common.helper.Event
 import com.akinci.socialapitrial.common.helper.Resource
 import com.akinci.socialapitrial.feature.secure.user.data.output.userdetail.UserTimeLineResponse
 import com.akinci.socialapitrial.feature.secure.user.data.output.userlist.UserResponse
 import com.akinci.socialapitrial.feature.secure.user.repository.UserRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import timber.log.Timber
 import javax.inject.Inject
-import kotlin.coroutines.CoroutineContext
 
 @HiltViewModel
 class UserDetailViewModel @Inject constructor(

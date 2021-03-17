@@ -1,7 +1,9 @@
 package com.akinci.socialapitrial.feature.secure.user.userlist.viewModel
 
-import androidx.arch.core.executor.testing.InstantTaskExecutorRule
-import com.akinci.socialapitrial.common.coroutines.TestContextProvider
+import androidx.lifecycle.Observer
+import com.akinci.socialapitrial.ahelpers.InstantExecutorExtension
+import com.akinci.socialapitrial.ahelpers.TestContextProvider
+import com.akinci.socialapitrial.common.helper.Event
 import com.akinci.socialapitrial.common.helper.Resource
 import com.akinci.socialapitrial.common.storage.LocalPreferenceConfig
 import com.akinci.socialapitrial.common.storage.Preferences
@@ -13,15 +15,14 @@ import com.google.common.truth.Truth.assertThat
 import io.mockk.*
 import io.mockk.impl.annotations.MockK
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import org.junit.After
-import org.junit.Before
-import org.junit.Rule
-import org.junit.Test
-import org.junit.rules.TestRule
+import org.junit.jupiter.api.AfterEach
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.extension.ExtendWith
 
+@ExperimentalCoroutinesApi
+@ExtendWith(InstantExecutorExtension::class)
 class UserListViewModelTest {
-    @get:Rule
-    var rule: TestRule = InstantTaskExecutorRule() // for live data usage
 
     @MockK
     lateinit var loginRepository: LoginRepository
@@ -33,19 +34,16 @@ class UserListViewModelTest {
     lateinit var sharedPreferences: Preferences
 
     lateinit var userListViewModel : UserListViewModel
-    @ExperimentalCoroutinesApi
-    lateinit var coroutineContext : TestContextProvider
 
-    @ExperimentalCoroutinesApi
-    @Before
+    private val coroutineContext = TestContextProvider()
+
+    @BeforeEach
     fun setUp() {
         MockKAnnotations.init(this, relaxUnitFun = true)
-
-        coroutineContext = TestContextProvider()
         userListViewModel = UserListViewModel(coroutineContext, userRepository, loginRepository, sharedPreferences)
     }
 
-    @After
+    @AfterEach
     fun tearDown() { unmockkAll() }
 
 
@@ -70,13 +68,20 @@ class UserListViewModelTest {
                     )
                 )
 
-        userListViewModel.userInfo.observeForever{
-            assertThat(it.name).isEqualTo("TestName")
-            assertThat(it.id).isEqualTo("1".toLong())
-            assertThat(it.screen_name).isEqualTo("ScreenTestName")
-        }
+        val observer = mockk<Observer<UserResponse>>(relaxed = true)
+        val slot = slot<UserResponse>()
+
+        userListViewModel.userInfo.observeForever(observer)
 
         userListViewModel.fetchUserInfo()
+
+        verify { observer.onChanged(capture(slot)) }
+
+        val value = slot.captured
+        assertThat(value.name).isEqualTo("TestName")
+        assertThat(value.id).isEqualTo("1".toLong())
+        assertThat(value.screen_name).isEqualTo("ScreenTestName")
+
         verify (exactly = 2) { sharedPreferences.getStoredTag(any()) }
     }
 
@@ -86,19 +91,19 @@ class UserListViewModelTest {
         every { sharedPreferences.getStoredTag(LocalPreferenceConfig.USER_NAME) } returns "Dummy"
         coEvery { userRepository.getUserInfo(any(), any()) } returns Resource.Error("Get User Info Service Encountered an Error")
 
-        userListViewModel.eventHandler.observeForever{
-            assertThat(it).isNotNull()
-            when(val value = it.getContentIfNotHandled()){
-                is Resource.Error -> {
-                    assertThat(value.message).isEqualTo("Get User Info Service Encountered an Error")
-                }
-            }
-        }
+        val observer = mockk<Observer<Event<Resource<String>>>>(relaxed = true)
+        val slot = slot<Event<Resource<String>>>()
+
+        userListViewModel.eventHandler.observeForever(observer)
 
         userListViewModel.fetchUserInfo()
+
+        verify { observer.onChanged(capture(slot)) }
+
+        val value = slot.captured.getContentIfNotHandled() as Resource.Error
+        assertThat(value.message).isEqualTo("Get User Info Service Encountered an Error")
     }
 
-    @ExperimentalCoroutinesApi
     @Test
     fun `signOut gets error response sends Resource Error`(){
         coEvery { loginRepository.signOut() } returns
