@@ -4,7 +4,6 @@ import com.akinci.socialapitrial.ahelpers.InstantExecutorExtension
 import com.akinci.socialapitrial.ahelpers.TestContextProvider
 import com.akinci.socialapitrial.common.helper.Resource
 import com.akinci.socialapitrial.feature.secure.user.data.output.userlist.FollowerOrFriendResponse
-import com.akinci.socialapitrial.feature.secure.user.data.output.userlist.UserResponse
 import com.akinci.socialapitrial.feature.secure.user.repository.UserRepository
 import com.akinci.socialapitrial.feature.secure.user.userlist.adapter.viewpager.ViewPagerMode
 import com.akinci.socialapitrial.jsonresponses.GetFollowerOrFriendResponse

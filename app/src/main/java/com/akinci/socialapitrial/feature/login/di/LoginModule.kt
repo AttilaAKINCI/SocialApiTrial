@@ -6,7 +6,6 @@ import com.akinci.socialapitrial.common.di.AppModule
 import com.akinci.socialapitrial.common.network.NetworkChecker
 import com.akinci.socialapitrial.feature.login.data.api.LoginServiceDao
 import com.akinci.socialapitrial.feature.login.repository.LoginRepository
-import com.akinci.socialapitrial.feature.login.repository.LoginRepositoryImpl
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -85,7 +84,7 @@ object LoginModule {
     fun provideLoginRepository(
         loginServiceDao: LoginServiceDao,
         networkChecker: NetworkChecker
-    ): LoginRepository = LoginRepositoryImpl(loginServiceDao, networkChecker)
+    ) = LoginRepository(loginServiceDao, networkChecker)
 
     /** END **/
 

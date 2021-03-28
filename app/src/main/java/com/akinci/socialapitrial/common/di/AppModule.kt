@@ -4,7 +4,6 @@ import android.content.Context
 import com.akinci.socialapitrial.common.coroutine.CoroutineContextProvider
 import com.akinci.socialapitrial.common.network.NetworkChecker
 import com.akinci.socialapitrial.common.network.RestConfig
-import com.akinci.socialapitrial.common.storage.LocalPreferences
 import com.akinci.socialapitrial.common.storage.Preferences
 import dagger.Module
 import dagger.Provides
@@ -38,7 +37,7 @@ object AppModule {
      * **/
     @Provides
     @Singleton
-    fun provideLocalPreferences(@ApplicationContext context: Context) : Preferences = LocalPreferences(context)
+    fun provideLocalPreferences(@ApplicationContext context: Context) = Preferences(context)
     /** END **/
 
 

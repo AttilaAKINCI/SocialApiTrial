@@ -1,7 +1,6 @@
 package com.akinci.socialapitrial.di
 
 import android.content.Context
-import com.akinci.socialapitrial.common.storage.LocalPreferences
 import com.akinci.socialapitrial.common.storage.Preferences
 import dagger.Module
 import dagger.Provides
@@ -22,6 +21,6 @@ object TestAppModule {
     @TestLocalPreference
     fun provideLocalPreferences(
         @ApplicationContext context: Context
-    ) : Preferences = LocalPreferences(context)
+    ) = Preferences(context)
 
 }

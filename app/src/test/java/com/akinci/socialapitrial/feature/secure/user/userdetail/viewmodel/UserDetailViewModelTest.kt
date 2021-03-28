@@ -5,11 +5,9 @@ import com.akinci.socialapitrial.ahelpers.InstantExecutorExtension
 import com.akinci.socialapitrial.ahelpers.TestContextProvider
 import com.akinci.socialapitrial.common.helper.Event
 import com.akinci.socialapitrial.common.helper.Resource
-import com.akinci.socialapitrial.feature.login.data.output.AccessTokenResponse
 import com.akinci.socialapitrial.feature.secure.user.data.output.userdetail.UserTimeLineResponse
 import com.akinci.socialapitrial.feature.secure.user.data.output.userlist.UserResponse
 import com.akinci.socialapitrial.feature.secure.user.repository.UserRepository
-import com.akinci.socialapitrial.jsonresponses.GetAccessToken
 import com.akinci.socialapitrial.jsonresponses.GetUserResponse
 import com.akinci.socialapitrial.jsonresponses.GetUserTimeLine
 import com.google.common.truth.Truth.assertThat
