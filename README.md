@@ -8,7 +8,7 @@ Contains pure Twitter API refenrence integrations
 SocialApiTrial application consist of 5 different fragments and 2 root activity. Each root activity symbolize different flows of features 
 and also hold a container layout in order to manage fragments which will be controlled by navigation component.
 
-[APK Link (https://drive.google.com/file/d/1PDIvO0fpkfOrVaFKl_pRzAS50zpBYRAN/view?usp=sharing)](https://drive.google.com/file/d/1PDIvO0fpkfOrVaFKl_pRzAS50zpBYRAN/view?usp=sharing)
+[APK Link (https://drive.google.com/file/d/1eIR9T2MoW8vPkkPISeJbvE5ssqIcUl2D/view?usp=sharing)](https://drive.google.com/file/d/1eIR9T2MoW8vPkkPISeJbvE5ssqIcUl2D/view?usp=sharing)
 
 Fragments :
 * SplashFragment
@@ -78,7 +78,7 @@ Repository layer handles that errors and informs ViewModel Layer with Resource.k
 Notes: `Optional json field should be marked as nullable ( ? ) otherwise service response can not be mapped to data class`
 
 ## Testing
-For unit tests, I created some utility testing classes. 
+For unit tests, I created some utility testing classes. MockK and JUnit5 is used for unit testing. Junit4 is used for integration testing
 
 Context dependent tests are placed under androidTest folder, Independent class and utility tests are placed 
 under test folder.
