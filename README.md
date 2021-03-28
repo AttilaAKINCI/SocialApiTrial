@@ -2,8 +2,6 @@
 SocialApiTrial is a proof of concept application of Twitter API services without using any 3rd party twitter library. 
 Contains pure Twitter API refenrence integrations
 
-![](https://user-images.githubusercontent.com/21987335/111656768-e278e380-881b-11eb-8f38-05c0959c733f.gif)
-
 ## UI
 SocialApiTrial application consist of 5 different fragments and 2 root activity. Each root activity symbolize different flows of features 
 and also hold a container layout in order to manage fragments which will be controlled by navigation component.
@@ -16,6 +14,8 @@ Fragments :
 * UserListFragment
 * ViewPagerContentFragment
 * UserDetailFragment
+
+<img src="https://user-images.githubusercontent.com/21987335/111656768-e278e380-881b-11eb-8f38-05c0959c733f.gif" width="400"/>
 
 ## 3rd party lib. usages & Tech Specs
 * Patterns
